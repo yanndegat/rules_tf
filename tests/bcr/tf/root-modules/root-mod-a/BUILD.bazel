@@ -1,0 +1,12 @@
+load("@rules_tf//tf:def.bzl", "tf_module")
+
+tf_module(
+    name = "root-mod-a",
+    providers = [
+        "random",
+    ],
+    deps = [
+        "@rules_tf_bcr_tests//tf/modules/mod-a",
+    ],
+    providers_versions = "@rules_tf_bcr_tests//tf:versions",
+)

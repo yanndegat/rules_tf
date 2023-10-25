@@ -1,0 +1,54 @@
+module(
+    name = "rules_tf",
+    version = "0.0.1",
+    repo_name = "rules_tf",
+)
+
+bazel_dep(name = "platforms", version = "0.0.7")
+bazel_dep(name = "rules_pkg", version = "0.9.1")
+bazel_dep(name = "bazel_skylib", version = "1.4.2")
+
+repos = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
+
+repos.download_terraform(
+    version = "1.2.9",
+    sha256 = "0e0fc38641addac17103122e1953a9afad764a90e74daf4ff8ceeba4e362f2fb",
+    os = "linux",
+    arch = "amd64",
+)
+
+repos.download_tfdoc(
+    version = "0.16.0",
+    sha256 = "328c16cd6552b3b5c4686b8d945a2e2e18d2b8145b6b66129cd5491840010182",
+    os = "linux",
+    arch = "amd64",
+)
+
+repos.download_tflint(
+    version = "0.48.0",
+    sha256 = "13c7947963c4dc4f0aa9e0cb7a0854367a425162a508bc7517d1cbcbef822f3c",
+    os = "linux",
+    arch = "amd64",
+)
+
+repos.download_tofu(
+    version = "1.6.0-alpha3",
+    sha256 = "bb1b65d5bffea4e1f840af2c32290d4c11ca27e3c55a386da89f5f014cf33196",
+    os = "linux",
+    arch = "amd64",
+)
+
+use_repo(
+    repos,
+    "terraform",
+    "tofu",
+    "tflint",
+    "tfdoc",
+)
+
+register_toolchains(
+    "@rules_tf//:terraform_linux_amd64_toolchain",
+    "@rules_tf//:tofu_linux_amd64_toolchain",
+    "@rules_tf//:tflint_linux_amd64_toolchain",
+    "@rules_tf//:tfdoc_linux_amd64_toolchain",
+)

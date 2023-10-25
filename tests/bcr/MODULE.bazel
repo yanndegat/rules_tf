@@ -1,0 +1,12 @@
+module(
+    name = "rules_tf_bcr_tests",
+    version = "0.0.1",
+)
+
+bazel_dep(name = "rules_tf", version = "", repo_name = "rules_tf")
+local_path_override(
+    module_name = "rules_tf",
+    path = "../..",
+)
+
+tf_toolchains = use_extension("@rules_tf//tf:toolchains.bzl", "tf_toolchains")
