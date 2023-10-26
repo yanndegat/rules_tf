@@ -22,14 +22,15 @@ def _impl(ctx):
     if tf_version != None and tf_version != "":
         versions["terraform"][0]["required_version"] = tf_version
 
-    ctx.actions.expand_template(
+    cmd = "printf '%s' '{json}' > ${{BUILD_WORKSPACE_DIRECTORY:-$PWD}}/{package}/versions.tf.json".format(
+        json = json.encode(versions),
+        package = ctx.label.package,
+    )
+
+    ctx.actions.write(
         output = out_file,
-        template = ctx.file._template,
+        content = cmd,
         is_executable = True,
-        substitutions = {
-            "@@json@@": json.encode(versions),
-            "@@package@@": ctx.label.package,
-        }
     )
 
     return [DefaultInfo(
@@ -46,10 +47,6 @@ tf_gen_versions = rule(
         "providers_versions": attr.label(
             mandatory = False,
             providers = [TfProvidersVersionsInfo],
-        ),
-        "_template": attr.label(
-            default = "//tf/rules:tf-gen-versions.sh",
-            allow_single_file = True,
         ),
     },
     executable = True,

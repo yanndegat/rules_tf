@@ -205,9 +205,14 @@ tf_format_test = rule(
 def _format_impl(ctx):
     tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
 
-    cmd = "{tf} fmt -recursive $@".format(
+    if len(ctx.attr.modules) < 1:
+        fail("you must provide a list of modules")
+
+    cmd = "for mod in {mods}; do {tf} fmt ${{BUILD_WORKSPACE_DIRECTORY}}/${{mod}}; done".format(
+        mods  = " ".join([p.label.package for p in ctx.attr.modules]),
         tf = tf_runtime.tf.short_path,
     )
+
     ctx.actions.write(
         output = ctx.outputs.executable,
         content = cmd,
@@ -221,7 +226,11 @@ def _format_impl(ctx):
 
 tf_format = rule(
     implementation = _format_impl,
-    attrs = {},
+    attrs = {
+        "modules": attr.label_list(
+            mandatory = True,
+        ),
+    },
     toolchains = ["@rules_tf//:terraform_toolchain_type"],
     executable = True,
 )

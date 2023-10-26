@@ -1,12 +1,13 @@
 TflintInfo = provider(
     doc = "Information about how to invoke tflint.",
-    fields = ["runner", "deps"],
+    fields = ["runner", "deps", "config"],
 )
 
 def _tflint_toolchain_impl(ctx):
     toolchain_info = platform_common.ToolchainInfo(
         runtime = TflintInfo(
             runner = ctx.file.wrapper,
+            config = ctx.file.config,
             deps = ctx.files.bash_tools + [
                 ctx.file.wrapper,
                 ctx.file.config,

@@ -12,7 +12,15 @@ BZL_FILES = [
     "**/BUILD",
 ]
 
-def tf_module(name, data = [], size="small", providers = [], providers_versions = None, deps = [], visibility= ["//visibility:public"]):
+def tf_module(name,
+              data = [],
+              size="small",
+              providers = [],
+              providers_versions = None,
+              tflint_config = None,
+              deps = [],
+              visibility= ["//visibility:public"]):
+
     tf_gen_versions(
         name = "gen-tf-versions",
         providers = providers,
@@ -47,6 +55,7 @@ def tf_module(name, data = [], size="small", providers = [], providers_versions 
     tf_lint_test(
         name = "lint",
         module = ":module",
+        config = tflint_config,
         size = size,
     )
 
@@ -73,15 +82,18 @@ def tf_module(name, data = [], size="small", providers = [], providers_versions 
     )
 
 
-def tf_format(name):
+def tf_format(name, modules):
     _tf_format(
         name = name,
+        modules = modules,
         visibility = ["//visibility:public"],
     )
 
-def tf_gen_doc(name):
+def tf_gen_doc(name, modules, config = None):
     _tf_gen_doc(
         name = name,
+        modules = modules,
+        config = config,
         visibility = ["//visibility:public"],
     )
 

@@ -1,4 +1,4 @@
-load("@rules_tf//tf:def.bzl", "tf_providers_versions")
+load("@rules_tf//tf:def.bzl", "tf_providers_versions", "tf_format", "tf_gen_doc")
 
 tf_providers_versions(
     name = "versions",
@@ -7,4 +7,35 @@ tf_providers_versions(
         "random" : "hashicorp/random:3.3.2",
         "null"   : "hashicorp/null:3.1.1",
     },
+)
+
+tf_format(
+    name = "tffmt",
+    modules = ["//{}/{}".format(package_name(), m) for m in subpackages(include = ["**/*.tf"])],
+)
+
+tf_gen_doc(
+    name = "tfgendoc",
+    modules = ["//{}/{}".format(package_name(), m) for m in subpackages(include = ["**/*.tf"])],
+)
+
+filegroup(
+    name = "tfdoc-config",
+    srcs = [
+        "my-tfdoc-config.yaml",
+    ],
+)
+
+filegroup(
+    name = "tflint-custom-config",
+    srcs = [
+        "my-tflint-config.hcl",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+tf_gen_doc(
+    name   = "custom-tfgendoc",
+    modules = ["//{}/{}".format(package_name(), m) for m in subpackages(include = ["**/*.tf"])],
+    config = ":tfdoc-config",
 )

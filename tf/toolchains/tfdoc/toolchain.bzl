@@ -1,6 +1,6 @@
 TfdocInfo = provider(
     doc = "Information about how to invoke tfdoc.",
-    fields = ["tfdoc", "config"],
+    fields = ["tfdoc", "config", "deps"],
 )
 
 def _tfdoc_toolchain_impl(ctx):
@@ -8,6 +8,10 @@ def _tfdoc_toolchain_impl(ctx):
         runtime = TfdocInfo(
             tfdoc = ctx.file.tfdoc,
             config = ctx.file.config,
+            deps = [
+                ctx.file.config,
+                ctx.file.tfdoc,
+            ],
         ),
     )
     return [toolchain_info]
