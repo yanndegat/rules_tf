@@ -2,6 +2,10 @@
 
 The Tf rules is useful to validate, lint and format terraform code.
 
+It can typically be used in a terraform monorepo of modules to enforce the 
+consistency of providers versions used across all modules, auto generate documentation
+and run lint and validation tests on all your modules.
+
 ## Getting Started
 
 To import rules_tf in your project, you first need to add it to your `MODULE.bazel` file:
