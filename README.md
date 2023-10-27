@@ -15,7 +15,7 @@ bazel_dep(name = "rules_tf", version = "0.0.1")
 git_override(
     module_name = "rules_tf",
     remote      = "https://github.com/yanndegat/rules_tf",
-    commit      = "ad0b1385cf213e55e60b9151f4f9ee92d4ea49d3",
+    commit      = "1866a4b07a79ff1a959e1646f8e69534df9337a7",
 )
 ```
 
