@@ -11,8 +11,12 @@ and run lint and validation tests on all your modules.
 To import rules_tf in your project, you first need to add it to your `MODULE.bazel` file:
 
 ```python
-bazel_dep(name = "rules_tf", version = "", repo_name = "rules_tf")
-tf_toolchains = use_extension("@rules_tf//tf:toolchains.bzl", "tf_toolchains")
+bazel_dep(name = "rules_tf", version = "0.0.1")
+git_override(
+    module_name = "rules_tf",
+    remote      = "https://github.com/yanndegat/rules_tf",
+    commit      = "ad0b1385cf213e55e60b9151f4f9ee92d4ea49d3",
+)
 ```
 
 Once you've imported the rule set , you can then load the tf rules in your `BUILD` files with:
