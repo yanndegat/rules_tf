@@ -11,7 +11,7 @@ bazel_dep(name = "bazel_skylib", version = "1.4.2")
 repos = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 
 terraform_default_version = "1.5.7"
-terraform_default_sha256 = "0e0fc38641addac17103122e1953a9afad764a90e74daf4ff8ceeba4e362f2fb"
+terraform_default_sha256 = "c0ed7bc32ee52ae255af9982c8c88a7a4c610485cf1d55feeb037eab75fa082c"
 tflint_default_version = "0.48.0"
 tflint_default_sha256 = "13c7947963c4dc4f0aa9e0cb7a0854367a425162a508bc7517d1cbcbef822f3c"
 tfdoc_default_version = "0.16.0"
