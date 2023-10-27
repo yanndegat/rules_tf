@@ -46,21 +46,15 @@ tflint_toolchain = rule(
     },
 )
 
-def register_tflint_toolchain(visibility):
-    toolchain_typename = "tflint_toolchain_type"
-    native.toolchain_type(
-        name = toolchain_typename,
-        visibility = visibility,
-    )
-
-    name = "tflint_linux_amd64"
+def register_tflint_toolchain(version, visibility):
+    name = "tflint-{}_linux_amd64".format(version)
     toolchain_name = "{}_toolchain".format(name)
 
     tflint_toolchain(
         name = "{}_impl".format(name),
-        tflint = "@tflint//:runtime",
-        config = "@tflint//:config.hcl",
-        wrapper = "@tflint//:wrapper.sh",
+        tflint = "@tflint-{}//:runtime".format(version),
+        config = "@tflint-{}//:config.hcl".format(version),
+        wrapper = "@tflint-{}//:wrapper.sh".format(version),
     )
 
     native.toolchain(
@@ -74,7 +68,7 @@ def register_tflint_toolchain(visibility):
             "@platforms//cpu:x86_64",
         ],
         toolchain = ":{}_impl".format(name),
-        toolchain_type = ":{}".format(toolchain_typename),
+        toolchain_type = "@rules_tf//:tflint_toolchain_type",
         visibility = visibility,
     )
 

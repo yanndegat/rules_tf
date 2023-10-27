@@ -11,7 +11,7 @@ def _tf_repositories(ctx):
                 fail("download: version must be specified in non-root module " + module.name)
 
             terraform_download(
-                name = "terraform",
+                name = "terraform-{}".format(download_tag.version),
                 version = download_tag.version,
                 sha256 = download_tag.sha256,
                 os = download_tag.os,
@@ -19,7 +19,7 @@ def _tf_repositories(ctx):
             )
         for index, download_tag in enumerate(module.tags.download_tfdoc):
             tfdoc_download(
-                name = "tfdoc",
+                name = "tfdoc-{}".format(download_tag.version),
                 version = download_tag.version,
                 sha256 = download_tag.sha256,
                 os = download_tag.os,
@@ -27,7 +27,7 @@ def _tf_repositories(ctx):
             )
         for index, download_tag in enumerate(module.tags.download_tflint):
             tflint_download(
-                name = "tflint",
+                name = "tflint-{}".format(download_tag.version),
                 version = download_tag.version,
                 sha256 = download_tag.sha256,
                 os = download_tag.os,
@@ -35,7 +35,7 @@ def _tf_repositories(ctx):
             )
         for index, download_tag in enumerate(module.tags.download_tofu):
             tofu_download(
-                name = "tofu",
+                name = "tofu-{}".format(download_tag.version),
                 version = download_tag.version,
                 sha256 = download_tag.sha256,
                 os = download_tag.os,

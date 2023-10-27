@@ -33,20 +33,14 @@ tfdoc_toolchain = rule(
     },
 )
 
-def register_tfdoc_toolchain(visibility):
-    toolchain_typename = "tfdoc_toolchain_type"
-    native.toolchain_type(
-        name = toolchain_typename,
-        visibility = visibility,
-    )
-
-    name = "tfdoc_linux_amd64"
+def register_tfdoc_toolchain(version, visibility):
+    name = "tfdoc-{}_linux_amd64".format(version)
     toolchain_name = "{}_toolchain".format(name)
 
     tfdoc_toolchain(
         name  = "{}_impl".format(name),
-        tfdoc = "@tfdoc//:runtime",
-        config = "@tfdoc//:config.yaml",
+        tfdoc = "@tfdoc-{}//:runtime".format(version),
+        config = "@tfdoc-{}//:config.yaml".format(version),
     )
 
     native.toolchain(
@@ -60,7 +54,7 @@ def register_tfdoc_toolchain(visibility):
             "@platforms//cpu:x86_64",
         ],
         toolchain = ":{}_impl".format(name),
-        toolchain_type = ":{}".format(toolchain_typename),
+        toolchain_type = "@rules_tf//:tfdoc_toolchain_type",
         visibility = visibility,
     )
 

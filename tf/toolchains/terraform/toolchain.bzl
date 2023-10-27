@@ -23,19 +23,13 @@ terraform_toolchain = rule(
     },
 )
 
-def register_terraform_toolchain(visibility):
-    toolchain_typename = "terraform_toolchain_type"
-    native.toolchain_type(
-        name = toolchain_typename,
-        visibility = visibility,
-    )
-
-    name = "terraform_linux_amd64"
+def register_terraform_toolchain(version, visibility):
+    name = "terraform-{}_linux_amd64".format(version)
     toolchain_name = "{}_toolchain".format(name)
 
     terraform_toolchain(
         name = "{}_impl".format(name),
-        tf = "@terraform//:runtime",
+        tf = "@terraform-{}//:runtime".format(version),
     )
 
     native.toolchain(
@@ -49,7 +43,7 @@ def register_terraform_toolchain(visibility):
             "@platforms//cpu:x86_64",
         ],
         toolchain = ":{}_impl".format(name),
-        toolchain_type = ":{}".format(toolchain_typename),
+        toolchain_type = "@rules_tf//:terraform_toolchain_type",
         visibility = visibility,
     )
 
@@ -75,7 +69,7 @@ def _download_impl(ctx):
 
     return {
         "version": ctx.attr.version,
-        "shaa256": ctx.attr.sha256,
+        "sha256": ctx.attr.sha256,
     }
 
 terraform_download = repository_rule(
