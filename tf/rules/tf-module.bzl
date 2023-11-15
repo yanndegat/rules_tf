@@ -145,7 +145,8 @@ tf_module_deps = rule(
 def _tf_validate_impl(ctx):
     tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
 
-    cmd = "{tf} init -backend=false; {tf} validate".format(
+    cmd = "{tf} -chdir={dir} init -backend=false; {tf} -chdir={dir} validate".format(
+        dir = ctx.attr.module.label.package,
         tf = tf_runtime.tf.path,
     )
 
