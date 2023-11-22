@@ -5,7 +5,7 @@ WORKDIR="${1:-}"
 CUSTOM_CONFIG="${2:-}"
 
 if [[ ! -d "${WORKDIR}" ]]; then
-    echo >&2 "usage: $0 WORKDIR"
+    echo >&2 "usage: $0 WORKDIR CUSTOM_CONFIG"
     exit 1
 fi
 
@@ -22,3 +22,4 @@ if [[ ! -f "${TFLINT_CONFIG_FILE}" ]]; then
 fi
 
 "${TFLINT_DIR}/tflint/tflint" --init --chdir="$WORKDIR" --config="${TFLINT_CONFIG_FILE}"
+"${TFLINT_DIR}/tflint/tflint" --chdir="$WORKDIR" --config="${TFLINT_CONFIG_FILE}"
