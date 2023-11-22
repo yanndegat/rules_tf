@@ -145,7 +145,7 @@ tf_module_deps = rule(
 def _tf_validate_impl(ctx):
     tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
 
-    cmd = "{tf} -chdir={dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror}; {tf} -chdir={dir} validate".format(
+    cmd = "{tf} -chdir={dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror} > /dev/null; {tf} -chdir={dir} validate".format(
         dir = ctx.attr.module.label.package,
         tf = tf_runtime.tf.path,
         plugins_mirror = ctx.attr.providers_versions[TfProvidersVersionsInfo].plugins_mirror.short_path,

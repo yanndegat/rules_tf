@@ -9,7 +9,7 @@ def _impl(ctx):
     if ctx.file.config != None:
         config_file = ctx.file.config.short_path
 
-    cmd = "{tf} -chdir={mod_dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror}; {runner} {mod_dir} {config_file}".format(
+    cmd = "{tf} -chdir={mod_dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror} > /dev/null; {runner} {mod_dir} {config_file}".format(
         tf = tf_runtime.tf.path,
         runner = tflint_runtime.runner.path,
         mod_dir = ctx.label.package,
