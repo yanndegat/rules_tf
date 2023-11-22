@@ -11,8 +11,9 @@ TfModuleInfo = provider(
 TfProvidersVersionsInfo = provider(
     doc = "Contains information about a Tf providers versions",
     fields = [
-        "versions",
+        "providers",
         "tf_version",
+        "plugins_mirror",
     ],
 )
 

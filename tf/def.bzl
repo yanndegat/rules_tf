@@ -13,10 +13,10 @@ BZL_FILES = [
 ]
 
 def tf_module(name,
+              providers_versions,
               data = [],
               size="small",
               providers = [],
-              providers_versions = None,
               tflint_config = None,
               deps = [],
               visibility= ["//visibility:public"]):
@@ -55,6 +55,7 @@ def tf_module(name,
     tf_lint_test(
         name = "lint",
         module = ":module",
+        providers_versions  = providers_versions,
         config = tflint_config,
         size = size,
     )
@@ -62,6 +63,7 @@ def tf_module(name,
     tf_validate_test(
         name = "validate",
         module = ":module",
+        providers_versions  = providers_versions,
         size = size,
     )
 
@@ -97,10 +99,10 @@ def tf_gen_doc(name, modules, config = None):
         visibility = ["//visibility:public"],
     )
 
-def tf_providers_versions(name, tf_version = "", versions = {}):
+def tf_providers_versions(name, tf_version = "", providers = {}):
     _tf_providers_versions(
         name = name,
-        versions = versions,
+        providers = providers,
         tf_version = tf_version,
         visibility = ["//visibility:public"],
     )

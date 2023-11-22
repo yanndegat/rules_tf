@@ -7,7 +7,7 @@ def _impl(ctx):
     tf_version = ""
 
     if ctx.attr.providers_versions != None:
-        providers_versions = ctx.attr.providers_versions[TfProvidersVersionsInfo].versions
+        providers_versions = ctx.attr.providers_versions[TfProvidersVersionsInfo].providers
         tf_version =  ctx.attr.providers_versions[TfProvidersVersionsInfo].tf_version
 
     versions = {

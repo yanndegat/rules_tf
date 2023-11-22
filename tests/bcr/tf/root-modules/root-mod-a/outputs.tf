@@ -5,5 +5,5 @@ output "my_output" {
 
 output "mod_outputs" {
   description = "output module's outputs"
-  value       = module.amodule.outputs
+  value       = module.amodule
 }

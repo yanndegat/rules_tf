@@ -25,9 +25,9 @@ Once you've imported the rule set , you can then load the tf rules in your `BUIL
 load("@rules_tf//tf:def.bzl", "tf_providers_versions", "tf_module")
 
 tf_providers_versions(
-    name = "versions",
+    name = "providers",
     tf_version = "1.2.3",
-    versions = {
+    providers = {
         "random" : "hashicorp/random:3.3.2",
         "null"   : "hashicorp/null:3.1.1",
     },
@@ -42,7 +42,7 @@ tf_module(
         "//tf/modules/mod-a",
     ],
     
-    providers_versions = ":versions",
+    providers_versions = ":providers",
 )
 ```
 
@@ -81,9 +81,9 @@ a dedicated target:
 load("@rules_tf//tf:def.bzl", "tf_providers_versions", "tf_module")
 
 tf_providers_versions(
-    name = "versions",
+    name = "providers",
     tf_version = "1.2.3",
-    versions = {
+    providers = {
         "random" : "hashicorp/random:3.3.2",
         "null"   : "hashicorp/null:3.1.1",
     },
@@ -98,7 +98,7 @@ tf_module(
         "//tf/modules/mod-a",
     ],
     
-    providers_versions = ":versions",
+    providers_versions = ":providers",
 )
 ```
 

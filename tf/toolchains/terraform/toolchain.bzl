@@ -1,12 +1,15 @@
 TerraformInfo = provider(
     doc = "Information about how to invoke Terraform.",
-    fields = ["tf"],
+    fields = ["tf", "deps"],
 )
 
 def _terraform_toolchain_impl(ctx):
     toolchain_info = platform_common.ToolchainInfo(
         runtime = TerraformInfo(
             tf = ctx.file.tf,
+            deps = [
+                ctx.file.tf,
+            ],
         ),
     )
     return [toolchain_info]

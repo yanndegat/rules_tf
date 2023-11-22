@@ -1,32 +1,70 @@
 load("@rules_tf//tf/rules:providers.bzl", "TfProvidersVersionsInfo")
 
 def _impl(ctx):
-    versions = {}
+    tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
+    providers = {}
 
-    for k in ctx.attr.versions:
-        v = ctx.attr.versions[k]
+    plugins_mirror = ctx.actions.declare_directory("plugins_mirror")
+    all_versions = ctx.actions.declare_file("versions.tf.json")
+
+    for k in ctx.attr.providers:
+        v = ctx.attr.providers[k]
         elems = v.split(":")
         if len(elems) != 2:
             fail("provider version format must be org/provider:version, was: %s".format(v))
 
-        version_elems = elems[0].split("/")
-        if len(version_elems) != 2:
+        provider_elems = elems[0].split("/")
+        if len(provider_elems) != 2:
             fail("provider version format must be org/provider:version, was: %s".format(v))
 
-        versions[k] = {
+        providers[k] = {
             "source": elems[0], "version": elems[1],
         }
 
 
-    return [TfProvidersVersionsInfo(
-        versions = versions,
-        tf_version = ctx.attr.tf_version,
-    )]
+    versions_tf = {
+        "terraform": [
+            {
+                "required_providers": [dict([(p, providers[p]) for p in providers ])],
+            }
+        ]
+    }
+
+    ctx.actions.run_shell(
+        outputs = [all_versions],
+        command = "printf '%s' '{json}' > {file}".format(
+            json = json.encode(versions_tf),
+            file = all_versions.path,
+        )
+    )
+
+    ctx.actions.run_shell(
+        inputs = [all_versions]+tf_runtime.deps,
+        outputs = [plugins_mirror],
+        use_default_shell_env = True,
+        command = "mkdir -p {dir}; {tf} -chdir={versions_dir} providers mirror $PWD/{dir} > /dev/null".format(
+            versions_dir = all_versions.dirname,
+            dir = plugins_mirror.path,
+            tf = tf_runtime.tf.path,
+        )
+    )
+
+    runtime_deps = [ plugins_mirror ] + tf_runtime.deps
+
+    return [
+        DefaultInfo( runfiles = ctx.runfiles(files = runtime_deps)),
+        TfProvidersVersionsInfo(
+            providers = providers,
+            tf_version = ctx.attr.tf_version,
+            plugins_mirror = plugins_mirror,
+        ),
+    ]
 
 tf_providers_versions = rule(
     implementation = _impl,
     attrs = {
-        "versions": attr.string_dict(mandatory = True),
+        "providers": attr.string_dict(mandatory = True),
         "tf_version": attr.string(mandatory = False),
     },
+    toolchains = ["@rules_tf//:terraform_toolchain_type"],
 )

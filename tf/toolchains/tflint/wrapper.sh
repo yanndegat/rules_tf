@@ -21,5 +21,4 @@ if [[ ! -f "${TFLINT_CONFIG_FILE}" ]]; then
     exit 1
 fi
 
-"${TFLINT_DIR}/tflint/tflint" --init --chdir="$WORKDIR" --config="${TFLINT_CONFIG_FILE}"
-"${TFLINT_DIR}/tflint/tflint" --chdir="$WORKDIR" --config="${TFLINT_CONFIG_FILE}"
+exec "${TFLINT_DIR}/tflint/tflint" --chdir="$WORKDIR" --config="${TFLINT_CONFIG_FILE}"

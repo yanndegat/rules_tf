@@ -1,4 +1,4 @@
-load("@rules_tf//tf/rules:providers.bzl", "TfModuleInfo")
+load("@rules_tf//tf/rules:providers.bzl", "TfModuleInfo", "TfProvidersVersionsInfo")
 load("@rules_tf//tf/rules:providers.bzl", "TfArtifactInfo")
 load("@rules_pkg//pkg:providers.bzl", "PackageArtifactInfo")
 load("@rules_pkg//pkg:providers.bzl", "PackageFilesInfo")
@@ -145,9 +145,10 @@ tf_module_deps = rule(
 def _tf_validate_impl(ctx):
     tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
 
-    cmd = "{tf} -chdir={dir} init -backend=false; {tf} -chdir={dir} validate".format(
+    cmd = "{tf} -chdir={dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror}; {tf} -chdir={dir} validate".format(
         dir = ctx.attr.module.label.package,
         tf = tf_runtime.tf.path,
+        plugins_mirror = ctx.attr.providers_versions[TfProvidersVersionsInfo].plugins_mirror.short_path,
     )
 
     ctx.actions.write(
@@ -156,6 +157,7 @@ def _tf_validate_impl(ctx):
     )
 
     deps = ctx.attr.module[TfModuleInfo].transitive_srcs.to_list() + [
+        ctx.attr.providers_versions[TfProvidersVersionsInfo].plugins_mirror,
         tf_runtime.tf,
     ]
 
@@ -167,6 +169,11 @@ tf_validate_test = rule(
     implementation = _tf_validate_impl,
     attrs = {
         "module": attr.label(providers = [TfModuleInfo], allow_files = True),
+        "providers_versions": attr.label(
+            providers = [TfProvidersVersionsInfo],
+            allow_files = True,
+            mandatory = True,
+        ),
     },
     test = True,
     toolchains = [
