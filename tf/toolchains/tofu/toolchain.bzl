@@ -23,30 +23,6 @@ tofu_toolchain = rule(
     },
 )
 
-def register_tofu_toolchain(version, visibility):
-    name = "tofu-{}_linux_amd64".format(version)
-    toolchain_name = "{}_toolchain".format(name)
-
-    tofu_toolchain(
-        name = "{}_impl".format(name),
-        tf = "@tofu-{}//:runtime".format(version),
-    )
-
-    native.toolchain(
-        name = toolchain_name,
-        exec_compatible_with = [
-            "@platforms//os:linux",
-            "@platforms//cpu:x86_64",
-        ],
-        target_compatible_with = [
-            "@platforms//os:linux",
-            "@platforms//cpu:x86_64",
-        ],
-        toolchain = ":{}_impl".format(name),
-        toolchain_type = "@rules_tf//:tofu_toolchain_type",
-        visibility = visibility,
-    )
-
 
 def _download_impl(ctx):
     ctx.report_progress("Downloading tofu")
@@ -55,6 +31,11 @@ def _download_impl(ctx):
         "BUILD",
         Label("@rules_tf//tf/toolchains/tofu:BUILD.toolchain.tpl"),
         executable = False,
+        substitutions = {
+            "{version}": ctx.attr.version,
+            "{os}": ctx.attr.os,
+            "{arch}": ctx.attr.arch,
+        },
     )
 
     url_template = "https://github.com/opentofu/opentofu/releases/download/v{version}/tofu_{version}_{os}_{arch}.zip"
@@ -66,6 +47,13 @@ def _download_impl(ctx):
         type = "zip",
         output = "tofu",
     )
+
+    return {
+        "version": ctx.attr.version,
+        "sha256": ctx.attr.sha256,
+        "os": ctx.attr.os,
+        "arch": ctx.attr.arch,
+    }
 
 tofu_download = repository_rule(
     implementation = _download_impl,

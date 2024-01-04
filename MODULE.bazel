@@ -10,54 +10,49 @@ bazel_dep(name = "bazel_skylib", version = "1.4.2")
 
 repos = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 
-terraform_default_version = "1.5.7"
-terraform_default_sha256 = "c0ed7bc32ee52ae255af9982c8c88a7a4c610485cf1d55feeb037eab75fa082c"
-tflint_default_version = "0.48.0"
-tflint_default_sha256 = "13c7947963c4dc4f0aa9e0cb7a0854367a425162a508bc7517d1cbcbef822f3c"
-tfdoc_default_version = "0.16.0"
-tfdoc_default_sha256 = "328c16cd6552b3b5c4686b8d945a2e2e18d2b8145b6b66129cd5491840010182"
-tofu_default_version = "1.6.0-valpha3"
-tofu_default_sha256 = "bb1b65d5bffea4e1f840af2c32290d4c11ca27e3c55a386da89f5f014cf33196"
-
-repos.download_terraform(
-    version = terraform_default_version,
-    sha256 = terraform_default_sha256,
-    os = "linux",
-    arch = "amd64",
-)
-
-repos.download_tfdoc(
-    version = tfdoc_default_version,
-    sha256 = tfdoc_default_sha256,
-    os = "linux",
-    arch = "amd64",
-)
-
-repos.download_tflint(
-    version = tflint_default_version,
-    sha256 = tflint_default_sha256,
-    os = "linux",
-    arch = "amd64",
-)
-
-repos.download_tofu(
-    version = tofu_default_version,
-    sha256 = tofu_default_sha256,
-    os = "linux",
-    arch = "amd64",
-)
-
 use_repo(
     repos,
-    "terraform-{}".format(terraform_default_version),
-    "tflint-{}".format(tflint_default_version),
-    "tfdoc-{}".format(tfdoc_default_version),
-    "tofu-{}".format(tofu_default_version),
+    # linux_amd64
+    "terraform_linux_amd64",
+    "tflint_linux_amd64",
+    "tfdoc_linux_amd64",
+    "tofu_linux_amd64",
+    # linux_arm64
+    "terraform_linux_arm64",
+    "tflint_linux_arm64",
+    "tfdoc_linux_arm64",
+    "tofu_linux_arm64",
+    # darwin_amd64
+    "terraform_darwin_amd64",
+    "tflint_darwin_amd64",
+    "tfdoc_darwin_amd64",
+    "tofu_darwin_amd64",
+    # darwin_arm64
+    "terraform_darwin_arm64",
+    "tflint_darwin_arm64",
+    "tfdoc_darwin_arm64",
+    "tofu_darwin_arm64",
 )
 
 register_toolchains(
-    "@rules_tf//:terraform-{}_linux_amd64_toolchain".format(terraform_default_version),
-    "@rules_tf//:tfdoc-{}_linux_amd64_toolchain".format(tfdoc_default_version),
-    "@rules_tf//:tflint-{}_linux_amd64_toolchain".format(tflint_default_version),
-    "@rules_tf//:tofu-{}_linux_amd64_toolchain".format(tofu_default_version),
+    # linux_amd64
+    "@rules_tf//:terraform_linux_amd64_toolchain",
+    "@rules_tf//:tfdoc_linux_amd64_toolchain",
+    "@rules_tf//:tflint_linux_amd64_toolchain",
+    "@rules_tf//:tofu_linux_amd64_toolchain",
+    # linux_arm64
+    "@rules_tf//:terraform_linux_arm64_toolchain",
+    "@rules_tf//:tfdoc_linux_arm64_toolchain",
+    "@rules_tf//:tflint_linux_arm64_toolchain",
+    "@rules_tf//:tofu_linux_arm64_toolchain",
+    # darwin_amd64
+    "@rules_tf//:terraform_darwin_amd64_toolchain",
+    "@rules_tf//:tfdoc_darwin_amd64_toolchain",
+    "@rules_tf//:tflint_darwin_amd64_toolchain",
+    "@rules_tf//:tofu_darwin_amd64_toolchain",
+    # darwin_arm64
+    "@rules_tf//:terraform_darwin_arm64_toolchain",
+    "@rules_tf//:tfdoc_darwin_arm64_toolchain",
+    "@rules_tf//:tflint_darwin_arm64_toolchain",
+    "@rules_tf//:tofu_darwin_arm64_toolchain",
 )

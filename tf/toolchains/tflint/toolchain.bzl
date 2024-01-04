@@ -46,33 +46,6 @@ tflint_toolchain = rule(
     },
 )
 
-def register_tflint_toolchain(version, visibility):
-    name = "tflint-{}_linux_amd64".format(version)
-    toolchain_name = "{}_toolchain".format(name)
-
-    tflint_toolchain(
-        name = "{}_impl".format(name),
-        tflint = "@tflint-{}//:runtime".format(version),
-        config = "@tflint-{}//:config.hcl".format(version),
-        wrapper = "@tflint-{}//:wrapper.sh".format(version),
-    )
-
-    native.toolchain(
-        name = toolchain_name,
-        exec_compatible_with = [
-            "@platforms//os:linux",
-            "@platforms//cpu:x86_64",
-        ],
-        target_compatible_with = [
-            "@platforms//os:linux",
-            "@platforms//cpu:x86_64",
-        ],
-        toolchain = ":{}_impl".format(name),
-        toolchain_type = "@rules_tf//:tflint_toolchain_type",
-        visibility = visibility,
-    )
-
-
 def _tflint_download_impl(ctx):
     ctx.report_progress("Downloading tflint")
 
@@ -80,6 +53,11 @@ def _tflint_download_impl(ctx):
         "BUILD.bazel",
         Label("@rules_tf//tf/toolchains/tflint:BUILD.toolchain.tpl"),
         executable = False,
+        substitutions = {
+            "{version}": ctx.attr.version,
+            "{os}": ctx.attr.os,
+            "{arch}": ctx.attr.arch,
+        },
     )
 
     ctx.template(
@@ -103,6 +81,13 @@ def _tflint_download_impl(ctx):
         type = "zip",
         output = "tflint",
     )
+
+    return {
+        "version": ctx.attr.version,
+        "sha256": ctx.attr.sha256,
+        "os": ctx.attr.os,
+        "arch": ctx.attr.arch,
+    }
 
 
 tflint_download = repository_rule(

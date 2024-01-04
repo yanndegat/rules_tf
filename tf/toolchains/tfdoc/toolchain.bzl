@@ -33,32 +33,6 @@ tfdoc_toolchain = rule(
     },
 )
 
-def register_tfdoc_toolchain(version, visibility):
-    name = "tfdoc-{}_linux_amd64".format(version)
-    toolchain_name = "{}_toolchain".format(name)
-
-    tfdoc_toolchain(
-        name  = "{}_impl".format(name),
-        tfdoc = "@tfdoc-{}//:runtime".format(version),
-        config = "@tfdoc-{}//:config.yaml".format(version),
-    )
-
-    native.toolchain(
-        name = toolchain_name,
-        exec_compatible_with = [
-            "@platforms//os:linux",
-            "@platforms//cpu:x86_64",
-        ],
-        target_compatible_with = [
-            "@platforms//os:linux",
-            "@platforms//cpu:x86_64",
-        ],
-        toolchain = ":{}_impl".format(name),
-        toolchain_type = "@rules_tf//:tfdoc_toolchain_type",
-        visibility = visibility,
-    )
-
-
 
 def _tfdoc_download_impl(ctx):
     ctx.report_progress("Downloading tfdoc")
@@ -67,6 +41,11 @@ def _tfdoc_download_impl(ctx):
         "BUILD",
         Label("@rules_tf//tf/toolchains/tfdoc:BUILD.toolchain.tpl"),
         executable = False,
+        substitutions = {
+            "{version}": ctx.attr.version,
+            "{os}": ctx.attr.os,
+            "{arch}": ctx.attr.arch,
+        },
     )
 
     ctx.template(
@@ -83,6 +62,13 @@ def _tfdoc_download_impl(ctx):
         sha256 = ctx.attr.sha256,
         output = "terraform-docs",
     )
+
+    return {
+        "version": ctx.attr.version,
+        "sha256": ctx.attr.sha256,
+        "os": ctx.attr.os,
+        "arch": ctx.attr.arch,
+    }
 
 tfdoc_download = repository_rule(
     _tfdoc_download_impl,

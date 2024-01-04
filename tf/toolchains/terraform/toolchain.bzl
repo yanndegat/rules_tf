@@ -26,31 +26,6 @@ terraform_toolchain = rule(
     },
 )
 
-def register_terraform_toolchain(version, visibility):
-    name = "terraform-{}_linux_amd64".format(version)
-    toolchain_name = "{}_toolchain".format(name)
-
-    terraform_toolchain(
-        name = "{}_impl".format(name),
-        tf = "@terraform-{}//:runtime".format(version),
-    )
-
-    native.toolchain(
-        name = toolchain_name,
-        exec_compatible_with = [
-            "@platforms//os:linux",
-            "@platforms//cpu:x86_64",
-        ],
-        target_compatible_with = [
-            "@platforms//os:linux",
-            "@platforms//cpu:x86_64",
-        ],
-        toolchain = ":{}_impl".format(name),
-        toolchain_type = "@rules_tf//:terraform_toolchain_type",
-        visibility = visibility,
-    )
-
-
 def _download_impl(ctx):
     ctx.report_progress("Downloading terraform")
 
@@ -58,6 +33,11 @@ def _download_impl(ctx):
         "BUILD",
         Label("@rules_tf//tf/toolchains/terraform:BUILD.toolchain.tpl"),
         executable = False,
+        substitutions = {
+            "{version}": ctx.attr.version,
+            "{os}": ctx.attr.os,
+            "{arch}": ctx.attr.arch,
+        },
     )
 
     url_template = "https://releases.hashicorp.com/terraform/{version}/terraform_{version}_{os}_{arch}.zip"
@@ -73,6 +53,8 @@ def _download_impl(ctx):
     return {
         "version": ctx.attr.version,
         "sha256": ctx.attr.sha256,
+        "os": ctx.attr.os,
+        "arch": ctx.attr.arch,
     }
 
 terraform_download = repository_rule(
