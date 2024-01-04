@@ -17,7 +17,7 @@ TERRAFORM_VERSIONS = {
         "sha256": "f4b4ad7c6b6088960a667e34495cae490fb072947a9ff266bf5929f5333565e4",
         "version": "1.5.7",
         "os" : "linux",
-        "arch": "amd64",
+        "arch": "arm64",
         "exec_compatible_with": [
             "@platforms//os:linux",
             "@platforms//cpu:arm64",
@@ -76,7 +76,7 @@ TFLINT_VERSIONS = {
         "sha256": "9060eb74e0278fe14a414447de8c9b61effd7f2d60e7bb8047ebcda9c6ed4f6f",
         "version": "0.50.0",
         "os" : "linux",
-        "arch": "amd64",
+        "arch": "arm64",
         "exec_compatible_with": [
             "@platforms//os:linux",
             "@platforms//cpu:arm64",
@@ -135,7 +135,7 @@ TFDOC_VERSIONS = {
         "sha256": "4189c4d0b418e5bcc642836b7f73e80d5d4d82b75ada73a7b78f923588d5f765",
         "version": "0.17.0",
         "os" : "linux",
-        "arch": "amd64",
+        "arch": "arm64",
         "exec_compatible_with": [
             "@platforms//os:linux",
             "@platforms//cpu:arm64",
@@ -194,7 +194,7 @@ TOFU_VERSIONS = {
         "sha256": "c04c52c5afd4a0417fcf9c7ad0d7ff05748983549ae830ee451ba77de0bd776c",
         "version": "1.6.0-rc1",
         "os" : "linux",
-        "arch": "amd64",
+        "arch": "arm64",
         "exec_compatible_with": [
             "@platforms//os:linux",
             "@platforms//cpu:arm64",
