@@ -8,8 +8,7 @@ bazel_dep(name = "rules_license", version = "0.0.7")
 bazel_dep(name = "rules_pkg", version = "0.9.1")
 bazel_dep(name = "bazel_skylib", version = "1.4.2")
 bazel_dep(name = "rules_python", version = "0.24.0")
-
-bazel_dep(name = "platforms", version = "0.0.7", dev_dependency = True)
+bazel_dep(name = "platforms", version = "0.0.7")
 
 repos = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 
