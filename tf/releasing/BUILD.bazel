@@ -1,0 +1,49 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+package(
+    default_applicable_licenses = ["//:license"],
+    default_visibility = ["//visibility:public"],
+)
+
+# WARNING: 2021-06-28. This is experimental and subject to change.
+
+# Sample usage:
+# load("@rules_tf//tf/releasing:defs.bzl", "print_rel_notes")
+# print_rel_notes(
+#     name = "relnotes",
+#     repo = "rules_tf",
+#     version = "2.1",
+#     outs = ["relnotes.txt"],
+# )
+
+filegroup(
+    name = "standard_package",
+    srcs = ["BUILD.bazel"] + glob([
+        "*.bzl",
+        "*.py",
+    ]),
+    visibility = [
+        "//distro:__pkg__",
+        "//tf:__pkg__",
+    ],
+)
+
+py_binary(
+    name = "print_rel_notes",
+    srcs = [
+        "print_rel_notes.py",
+    ],
+    imports = ["../.."],
+    python_version = "PY3",
+)
+
+# This is an internal tool. Use at your own risk.
+py_binary(
+    name = "git_changelog_private",
+    srcs = [
+        "git_changelog_private.py",
+    ],
+    srcs_version = "PY3",
+    # TODO(https://github.com/bazelbuild/bazel/issues/7377): Make this private.
+    visibility = ["//visibility:public"],
+)

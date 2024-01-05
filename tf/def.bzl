@@ -6,7 +6,8 @@ load("@rules_tf//tf/rules:tf-providers-versions.bzl", _tf_providers_versions = "
 load("@rules_tf//tf/rules:tf-lint.bzl", "tf_lint_test")
 load("@rules_tf//tf/rules:tf-module.bzl", _tf_module = "tf_module", "tf_module_deps", "tf_artifact", "tf_validate_test", _tf_format = "tf_format", "tf_format_test")
 
-BZL_FILES = [
+bzl_files = [
+    "**/*.bzl",
     "**/*.bazel",
     "**/WORKSPACE*",
     "**/BUILD",
@@ -30,7 +31,7 @@ def tf_module(name,
 
     pkg_files(
         name = "srcs",
-        srcs = native.glob(["**/*"], exclude=BZL_FILES) + data,
+        srcs = native.glob(["**/*"], exclude=bzl_files) + data,
         strip_prefix = "", # this is important to preserve directory structure
         prefix = native.package_name(),
     )

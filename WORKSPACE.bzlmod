@@ -1,0 +1,13 @@
+# Include dependencies which are only needed for development here.
+
+# Needed for making our release notes
+load("//tf/toolchains/git:git_configure.bzl", "experimental_find_system_git_bzlmod")
+
+experimental_find_system_git_bzlmod(
+    name = "rules_tf_git",
+    verbose = False,
+)
+register_toolchains(
+    "@rules_tf_git//:git_auto_toolchain",
+    "//tf/toolchains/git:git_missing_toolchain",
+)

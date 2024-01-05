@@ -1,0 +1,21 @@
+package(default_applicable_licenses = ["//:license"])
+
+exports_files(
+    glob([
+        "*.bzl",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "standard_package",
+    srcs = glob([
+        "*.bzl",
+    ]) + [
+        "BUILD.bazel",
+    ],
+    visibility = [
+        "//distro:__pkg__",
+        "//tf:__pkg__",
+    ],
+)

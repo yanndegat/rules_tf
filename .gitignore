@@ -1,9 +1,4 @@
-/bazel-bin
-/bazel-out
-/bazel-testlogs
-/tests/bcr/bazel-bcr
-/tests/bcr/bazel-bin
-/tests/bcr/bazel-out
-/tests/bcr/bazel-testlogs
+/bazel-*
+/tests/bcr/bazel-*
 .DS_STORE
 .ijwb/
