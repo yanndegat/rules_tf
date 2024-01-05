@@ -39,7 +39,6 @@ def print_notes(org, repo, version, tarball_path, mirror_host=None,
       mirror_host, org, repo, version, file_name) if mirror_host else None
   relnotes_template = string.Template(textwrap.dedent(
       """
-      ------------------------ snip ----------------------------
       ⚙️ MODULE.bazel setup
 
       ```
@@ -57,9 +56,6 @@ def print_notes(org, repo, version, tarball_path, mirror_host=None,
       # Changelog
 
       ${changelog}
-
-      ------------------------ snip ----------------------------
-
       """).strip())
   print(relnotes_template.substitute({
       'changelog': changelog if changelog != '' else 'First release',
