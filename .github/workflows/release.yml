@@ -3,13 +3,8 @@ name: CI
 
 on:  # yamllint disable rule:truthy
   push:
-    branches:
-      - main
     tags:
       - "*.*.*"
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:

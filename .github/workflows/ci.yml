@@ -1,0 +1,31 @@
+---
+name: CI
+
+on:  # yamllint disable rule:truthy
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test
+        run: bazel test //...
+        working-directory: tests/bcr
+
+  test-mac:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test
+        run: bazel test //...
+        working-directory: tests/bcr
