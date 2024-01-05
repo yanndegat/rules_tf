@@ -39,7 +39,7 @@ jobs:
 
       - name: Create release archive and notes
         run: |
-          bazel build //distro
+          bazel build //distro //distro:relnotes
 
       - name: Archive release artifacts
         uses: actions/upload-artifact@v4
@@ -47,7 +47,7 @@ jobs:
           name: release
           path: |
             bazel-bin/distro/*.tar.gz
-            bazel-bin/distro/*.txt
+            bazel-bin/distro/relnotes.md
           retention-days: 5
 
   release:
@@ -63,6 +63,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          body_path: relnotes.txt
+          body_path: relnotes.md
           fail_on_unmatched_files: true
           files: rules_tf-*.tar.gz

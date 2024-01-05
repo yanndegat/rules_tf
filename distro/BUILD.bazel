@@ -60,7 +60,7 @@ genrule(
 
 print_rel_notes(
     name = "relnotes",
-    outs = ["relnotes.txt"],
+    outs = ["relnotes.md"],
     changelog = ":changelog",
     deps_method = "rules_tf_dependencies",
     mirror_host = "mirror.bazel.build",

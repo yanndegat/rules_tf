@@ -40,23 +40,24 @@ def print_notes(org, repo, version, tarball_path, mirror_host=None,
   relnotes_template = string.Template(textwrap.dedent(
       """
       ------------------------ snip ----------------------------
-      **Change Log**
-
-      ${changelog}
-
-      **MODULE.bazel setup**
+      ⚙️ MODULE.bazel setup
 
       ```
       bazel_dep(name = "${repo}", version = "${version}")
       ```
 
-      **WORKSPACE setup**
+      ⚙️ WORKSPACE setup
 
       BZL MOD only!
 
-      **Using the rules**
+      📚 Using the rules
 
       See [the source](https://github.com/${org}/${repo}/tree/${version}).
+
+      # Changelog
+
+      ${changelog}
+
       ------------------------ snip ----------------------------
 
       """).strip())
