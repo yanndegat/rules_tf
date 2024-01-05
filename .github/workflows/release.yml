@@ -1,5 +1,5 @@
 ---
-name: CI
+name: Release
 
 on:  # yamllint disable rule:truthy
   push:
