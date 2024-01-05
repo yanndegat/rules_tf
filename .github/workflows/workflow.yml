@@ -50,7 +50,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: release
-          path: bazel-bin/distro/*.tar.gz,bazel-bin/distro/*.txt,
+          path: |
+            bazel-bin/distro/*.tar.gz
+            bazel-bin/distro/*.txt
           retention-days: 5
 
   release:
