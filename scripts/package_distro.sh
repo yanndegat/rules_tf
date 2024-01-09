@@ -14,5 +14,5 @@ ORIGTAR="$(realpath "$ORIGTAR")"
 NEWTAR="${TMPDIR}/$(basename "${ORIGTAR}")"
 tar -C "$TMPDIR" -xzf "${ORIGTAR}"
 cp -Rf tests "$TMPDIR"
-(cd "$TMPDIR"; tar -czf "${NEWTAR}" *)
+(cd "$TMPDIR"; tar -czf "${NEWTAR}" * .??*)
 cp -f "$NEWTAR" bazel-bin/distro/

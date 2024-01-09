@@ -7,6 +7,7 @@ experimental_find_system_git_bzlmod(
     name = "rules_tf_git",
     verbose = False,
 )
+
 register_toolchains(
     "@rules_tf_git//:git_auto_toolchain",
     "//tf/toolchains/git:git_missing_toolchain",
