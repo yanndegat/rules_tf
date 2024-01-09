@@ -39,7 +39,7 @@ jobs:
 
       - name: Create release archive and notes
         run: |
-          bazel build //distro //distro:relnotes
+          scripts/package_distro.sh
 
       - name: Archive release artifacts
         uses: actions/upload-artifact@v4
