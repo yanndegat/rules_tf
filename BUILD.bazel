@@ -29,6 +29,7 @@ filegroup(
     srcs = glob([
         "*.bzl",
     ]) + [
+        ".bazelignore",
         "BUILD.bazel",
         "LICENSE",
         "MODULE.bazel",
