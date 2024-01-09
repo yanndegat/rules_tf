@@ -24,7 +24,7 @@ def register_toolchains():
         native.toolchain(
             name = toolchain_name,
             exec_compatible_with = TERRAFORM_VERSIONS[version]["exec_compatible_with"],
-            target_compatible_with = TERRAFORM_VERSIONS[version]["exec_compatible_with"],
+            target_compatible_with = TERRAFORM_VERSIONS[version]["target_compatible_with"],
             toolchain = ":{}_impl".format(toolchain_name),
             toolchain_type = ":terraform_toolchain_type",
             visibility = ["//visibility:public"],
@@ -47,7 +47,7 @@ def register_toolchains():
         native.toolchain(
             name = toolchain_name,
             exec_compatible_with = TFLINT_VERSIONS[version]["exec_compatible_with"],
-            target_compatible_with = TFLINT_VERSIONS[version]["exec_compatible_with"],
+            target_compatible_with = TFLINT_VERSIONS[version]["target_compatible_with"],
             toolchain = ":{}_impl".format(toolchain_name),
             toolchain_type = ":tflint_toolchain_type",
             visibility = ["//visibility:public"],
@@ -70,7 +70,7 @@ def register_toolchains():
         native.toolchain(
             name = toolchain_name,
             exec_compatible_with = TFDOC_VERSIONS[version]["exec_compatible_with"],
-            target_compatible_with = TFDOC_VERSIONS[version]["exec_compatible_with"],
+            target_compatible_with = TFDOC_VERSIONS[version]["target_compatible_with"],
             toolchain = ":{}_impl".format(toolchain_name),
             toolchain_type = ":tfdoc_toolchain_type",
             visibility = ["//visibility:public"],
@@ -91,7 +91,7 @@ def register_toolchains():
         native.toolchain(
             name = toolchain_name,
             exec_compatible_with = TOFU_VERSIONS[version]["exec_compatible_with"],
-            target_compatible_with = TOFU_VERSIONS[version]["exec_compatible_with"],
+            target_compatible_with = TOFU_VERSIONS[version]["target_compatible_with"],
             toolchain = ":{}_impl".format(toolchain_name),
             toolchain_type = ":tofu_toolchain_type",
             visibility = ["//visibility:public"],
