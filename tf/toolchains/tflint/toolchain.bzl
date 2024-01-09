@@ -82,13 +82,7 @@ def _tflint_download_impl(ctx):
         output = "tflint",
     )
 
-    return {
-        "version": ctx.attr.version,
-        "sha256": ctx.attr.sha256,
-        "os": ctx.attr.os,
-        "arch": ctx.attr.arch,
-    }
-
+    return
 
 tflint_download = repository_rule(
     _tflint_download_impl,

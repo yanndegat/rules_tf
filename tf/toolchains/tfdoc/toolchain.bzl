@@ -63,12 +63,7 @@ def _tfdoc_download_impl(ctx):
         output = "terraform-docs",
     )
 
-    return {
-        "version": ctx.attr.version,
-        "sha256": ctx.attr.sha256,
-        "os": ctx.attr.os,
-        "arch": ctx.attr.arch,
-    }
+    return
 
 tfdoc_download = repository_rule(
     _tfdoc_download_impl,

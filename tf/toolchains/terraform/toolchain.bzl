@@ -50,12 +50,7 @@ def _download_impl(ctx):
         output = "terraform",
     )
 
-    return {
-        "version": ctx.attr.version,
-        "sha256": ctx.attr.sha256,
-        "os": ctx.attr.os,
-        "arch": ctx.attr.arch,
-    }
+    return
 
 terraform_download = repository_rule(
     implementation = _download_impl,
