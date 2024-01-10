@@ -35,7 +35,6 @@ pkg_tar(
         "//:standard_package",
         "//tf:standard_package",
         "//tf/rules:standard_package",
-        "//tf/releasing:standard_package",
         "//tf/toolchains/git:standard_package",
         "//tf/toolchains/terraform:standard_package",
         "//tf/toolchains/tfdoc:standard_package",
