@@ -51,41 +51,19 @@ def print_notes(org, repo, version, tarball_path, mirror_host=None,
 
       📚 Using the rules
 
-      See [the source](https://github.com/${org}/${repo}/tree/${version}).
+      See [the source](https://github.com/${org}/${repo}/tree/v${version}).
 
       # Changelog
 
       ${changelog}
+
       """).strip())
   print(relnotes_template.substitute({
-      'changelog': changelog if changelog != '' else 'First release',
+      'changelog': changelog if changelog != 'TBD' else 'First release',
       'org': org,
       'repo': repo,
       'version': version,
   }))
-  if mirror_url:
-    file = os.path.basename(tarball_path)
-    path = 'github.com/{org}/{repo}/releases/download/{version}/{file}'.format(
-        org=org,
-        repo=repo,
-        version=version,
-        file=file
-    )
-    mirroring_template = string.Template(textwrap.dedent(
-        """
-
-        !!!: Make sure to copy the file to the release notes.
-        If you are using Google Cloud Storage, you might use a command like
-        gsutil cp bazel-bin/distro/${file} gs://bazel-mirror/${path}
-        gsutil setmeta -h "Cache-Control: public, max-age=31536000" "gs://bazel-mirror/${path}"
-        """).strip())
-    print(mirroring_template.substitute({
-        'org': org,
-        'repo': repo,
-        'version': version,
-        'file': file,
-        'path': path,
-    }))
 
 
 def main():

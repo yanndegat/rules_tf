@@ -19,7 +19,17 @@ import subprocess
 import sys
 
 
-def guess_previous_release_tag(git_path, pattern=None):
+def short_commit_id_tag(git_path, version, verbose=False):
+  assert git_path
+  most_recent = None
+  cmd = [git_path, 'rev-parse', '--short', version]
+  with subprocess.Popen(cmd, stdout=subprocess.PIPE) as proc:
+    res = proc.stdout.read().decode('utf-8').strip()
+    if verbose:
+      print('Running cmd: {}, output: {}'.format(cmd, res))
+    return res
+
+def guess_previous_release_tag(git_path, pattern=None, verbose=False):
   assert git_path
   most_recent = None
   cmd = [git_path, 'tag']
@@ -28,18 +38,24 @@ def guess_previous_release_tag(git_path, pattern=None):
   # We are doing something dumb here for now. Grab the list of tags, and pick
   # the last one.
   with subprocess.Popen(cmd, stdout=subprocess.PIPE) as proc:
-    most_recent = proc.stdout.read().decode('utf-8')
-    most_recent = most_recent.strip().replace('\n\n', '\n').split('\n')[-1]
+    res = proc.stdout.read().decode('utf-8').strip()
+    if verbose:
+      print('Running cmd: {}, output: {}'.format(cmd, res))
+    most_recent = res.replace('\n\n', '\n').split('\n')[-1]
+
   return most_recent
 
 
-def git_changelog(from_ref, to_ref='HEAD', git_path=None):
+def git_changelog(from_ref, to_ref='HEAD', git_path=None, verbose=False):
   assert from_ref
   assert to_ref
   assert git_path
-  cmd = [git_path, 'log', '%s..%s' % (from_ref, to_ref)]
+  cmd = [git_path, 'log', '--pretty=format:- %h: %s (by %an)', '%s..%s' % (from_ref, to_ref)]
   with subprocess.Popen(cmd, stdout=subprocess.PIPE) as proc:
-    return proc.stdout.read().decode('utf-8')
+    res = proc.stdout.read().decode('utf-8').strip()
+    if verbose:
+      print('Running cmd: {}, output: {}'.format(cmd, res))
+    return res
 
 
 def main():
@@ -59,12 +75,17 @@ def main():
     os.chdir(options.git_root)
     from_ref = options.from_ref
     if not from_ref or from_ref == '_LATEST_TAG_':
-      from_ref = guess_previous_release_tag(options.git_path)
+      from_ref = guess_previous_release_tag(options.git_path, verbose=options.verbose)
+
     to_ref = options.to_ref or 'HEAD'
+
+    from_ref = short_commit_id_tag(options.git_path, from_ref, verbose=options.verbose)
+    to_ref = short_commit_id_tag(options.git_path, to_ref, verbose=options.verbose)
+
     if options.verbose:
       print('Getting changelog from %s to %s' % (from_ref, to_ref))
     changelog = git_changelog(
-        from_ref=from_ref, to_ref=to_ref, git_path=options.git_path)
+        from_ref=from_ref, to_ref=to_ref, git_path=options.git_path, verbose=options.verbose)
     out.write(changelog)
   return 0
 

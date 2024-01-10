@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("//:version.bzl", "version")
+load("//:version.bzl", "next_version", "previous_version")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("//tf/releasing:defs.bzl", "print_rel_notes")
 load("//tf/releasing:git.bzl", "git_changelog")
@@ -24,12 +24,12 @@ package(
 
 alias(
     name = "distro",
-    actual = "rules_tf-%s" % version,
+    actual = "rules_tf-%s" % next_version,
 )
 
 # Build the artifact to put on the github release page.
 pkg_tar(
-    name = "rules_tf-%s" % version,
+    name = "rules_tf-%s" % next_version,
     srcs = [
         ":small_workspace",
         "//:standard_package",
@@ -65,16 +65,18 @@ print_rel_notes(
     mirror_host = "mirror.bazel.build",
     org = "yanndegat",
     repo = "rules_tf",
-    version = version,
+    version = next_version,
 )
 
 git_changelog(
     name = "changelog",
     out = "changelog.txt",
+    from_ref = "v{}".format(previous_version),
+    verbose = True,
 )
 
 genrule(
     name = "version_as_py",
     outs = ["release_version.py"],
-    cmd = "echo RELEASE_VERSION = \\'%s\\' >$@" % version,
+    cmd = "echo RELEASE_VERSION = \\'%s\\' >$@" % next_version,
 )

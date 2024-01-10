@@ -6,7 +6,13 @@
 
 set -eEuo pipefail
 
-bazel build //distro //distro:relnotes
+if [[ "$(git rev-parse --is-shallow-repository)" != "false" ]]; then
+   git fetch --unshallow --tags
+else
+    git fetch --tags
+fi
+
+bazel build //distro/...
 
 TMPDIR=$(mktemp -d)
 ORIGTAR="$(find bazel-bin/distro/ -name "*.tar.gz" -type f | head -1)"
