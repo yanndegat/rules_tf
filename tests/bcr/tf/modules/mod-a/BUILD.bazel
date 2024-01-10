@@ -5,6 +5,6 @@ tf_module(
     providers = [
         "random",
     ],
-    providers_versions = "@rules_tf_bcr_tests//tf:versions",
+    providers_versions = "//tf:versions",
     tflint_config = "//tf:tflint-custom-config"
 )
