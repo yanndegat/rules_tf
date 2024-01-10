@@ -20,13 +20,15 @@ def tf_module(name,
               providers = [],
               tflint_config = None,
               deps = [],
-              visibility= ["//visibility:public"]):
+              visibility= ["//visibility:public"],
+              tags = []):
 
     tf_gen_versions(
         name = "gen-tf-versions",
         providers = providers,
         providers_versions  = providers_versions,
         visibility = visibility,
+        tags = tags,
     )
 
     pkg_files(
@@ -34,23 +36,27 @@ def tf_module(name,
         srcs = native.glob(["**/*"], exclude=bzl_files) + data,
         strip_prefix = "", # this is important to preserve directory structure
         prefix = native.package_name(),
+        tags = tags,
     )
 
     _tf_module(
         name = "module",
         deps = deps,
         srcs = ":srcs",
+        tags = tags,
     )
 
     tf_module_deps(
         name = "deps",
         mod = ":module",
+        tags = tags,
     )
 
     tf_format_test(
         name = "format",
         size = size,
         module = ":module",
+        tags = tags,
     )
 
     tf_lint_test(
@@ -59,6 +65,7 @@ def tf_module(name,
         providers_versions  = providers_versions,
         config = tflint_config,
         size = size,
+        tags = tags,
     )
 
     tf_validate_test(
@@ -66,6 +73,7 @@ def tf_module(name,
         module = ":module",
         providers_versions  = providers_versions,
         size = size,
+        tags = tags,
     )
 
     pkg_tar(
@@ -74,36 +82,41 @@ def tf_module(name,
         out = "{}.tar.gz".format(name),
         extension = "tar.gz",
         strip_prefix = ".", # this is important to preserve directory structure
+        tags = tags,
     )
 
     tf_artifact(
         name = name,
         module = ":module",
         package = ":tgz",
-        tags = ["no-sandbox"],
         visibility = ["//visibility:public"],
+        tags = tags,
     )
 
 
-def tf_format(name, modules):
+def tf_format(name, modules, **kwargs):
     _tf_format(
         name = name,
         modules = modules,
         visibility = ["//visibility:public"],
+        **kwargs
     )
 
-def tf_gen_doc(name, modules, config = None):
+def tf_gen_doc(name, modules, config = None, **kwargs):
     _tf_gen_doc(
         name = name,
         modules = modules,
         config = config,
         visibility = ["//visibility:public"],
+        **kwargs
     )
 
-def tf_providers_versions(name, tf_version = "", providers = {}):
+def tf_providers_versions(name, tf_version = "", providers = {}, tags = ["no-sandbox"], **kwargs):
     _tf_providers_versions(
         name = name,
         providers = providers,
         tf_version = tf_version,
         visibility = ["//visibility:public"],
+        tags = tags,
+        **kwargs
     )
