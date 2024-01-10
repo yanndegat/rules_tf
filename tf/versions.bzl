@@ -177,8 +177,8 @@ TFDOC_VERSIONS = {
 
 TOFU_VERSIONS = {
     "linux_amd64":{
-        "version": "1.6.0-rc1",
-        "sha256": "c810fa64d7147df4272681360ef5bc9a366e574bfdabd6b88b18e2c36c3b1aee",
+        "version": "1.6.0",
+        "sha256": "b96c3d1235bc4fd53b199175818a35642e50cbc6b82b8422dcab59240d06d885",
         "os" : "linux",
         "arch": "amd64",
         "exec_compatible_with": [
@@ -191,8 +191,8 @@ TOFU_VERSIONS = {
         ],
     },
     "linux_arm64":{
-        "sha256": "c04c52c5afd4a0417fcf9c7ad0d7ff05748983549ae830ee451ba77de0bd776c",
-        "version": "1.6.0-rc1",
+        "version": "1.6.0",
+        "sha256": "c2058c1e2f2222d81de0ad291eace3e34330cc7b74315eaacb60a5b6402527b1",
         "os" : "linux",
         "arch": "arm64",
         "exec_compatible_with": [
@@ -205,8 +205,8 @@ TOFU_VERSIONS = {
         ],
     },
     "darwin_amd64":{
-        "version": "1.6.0-rc1",
-        "sha256": "91cf2d546c47f8c5c6f82f8c0f80f23812a258abbcaa7cc13c99a521af12fdcb",
+        "version": "1.6.0",
+        "sha256": "0d94fd7d2bc9d0f727dd839d9bccf4c7f2a5d0b0c761472fdd1809429947041b",
         "os" : "darwin",
         "arch": "amd64",
         "exec_compatible_with": [
@@ -219,8 +219,8 @@ TOFU_VERSIONS = {
         ],
     },
     "darwin_arm64":{
-        "version": "1.6.0-rc1",
-        "sha256": "fe70b24e7086d309ce5b16b63ec32d3e932e181b713028d2400fa7a333b71ba1",
+        "version": "1.6.0",
+        "sha256": "c668f56d5079908bf4288b45f73d223a3be17ae45336f41c14f5472b08502906",
         "os" : "darwin",
         "arch": "arm64",
         "exec_compatible_with": [
