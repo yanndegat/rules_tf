@@ -29,25 +29,23 @@ tf_artifact = rule(
 
 
 def _module_impl(ctx):
-    out = ctx.files.srcs
-
-    transitive_srcs = None
-
     if len([f for f in ctx.files.srcs if f.basename.endswith(".tf")  or f.basename.endswith(".tf.json") ]) == 0:
         fail("tf modules must contain at least one .tf file.")
 
+    all_srcs = depset(
+        ctx.files.srcs,
+        transitive = [dep[TfModuleInfo].transitive_srcs if TfModuleInfo in dep else dep.files for dep in ctx.attr.deps],
+    )
+
     return [
         DefaultInfo(
-            files = depset(out),
+            files = all_srcs,
         ),
         TfModuleInfo(
             files = ctx.attr.srcs,
             deps = ctx.attr.deps,
             module_path = ctx.label.package,
-            transitive_srcs = depset(
-                out,
-                transitive = [dep[TfModuleInfo].transitive_srcs if TfModuleInfo in dep else dep.files for dep in ctx.attr.deps],
-            ),
+            transitive_srcs = all_srcs,
         ),
         ctx.attr.srcs[PackageFilesInfo],
     ]
