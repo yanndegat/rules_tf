@@ -37,6 +37,7 @@ def tf_module(name,
         strip_prefix = "", # this is important to preserve directory structure
         prefix = native.package_name(),
         tags = tags,
+        visibility = visibility,
     )
 
     _tf_module(
