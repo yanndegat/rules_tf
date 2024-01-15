@@ -13,6 +13,14 @@ def register_toolchains():
         name = "terraform_toolchain_type",
         visibility = ["//visibility:public"],
     )
+    native.toolchain_type(
+        name = "tflint_toolchain_type",
+        visibility = ["//visibility:public"],
+    )
+    native.toolchain_type(
+        name = "tfdoc_toolchain_type",
+        visibility = ["//visibility:public"],
+    )
 
     for version in TERRAFORM_VERSIONS:
         toolchain_name = "terraform_{}_toolchain".format(version)
@@ -30,10 +38,6 @@ def register_toolchains():
             visibility = ["//visibility:public"],
         )
 
-    native.toolchain_type(
-        name = "tflint_toolchain_type",
-        visibility = ["//visibility:public"],
-    )
 
     for version in TFLINT_VERSIONS:
         toolchain_name = "tflint_{}_toolchain".format(version)
@@ -54,11 +58,6 @@ def register_toolchains():
         )
 
 
-    native.toolchain_type(
-        name = "tfdoc_toolchain_type",
-        visibility = ["//visibility:public"],
-    )
-
     for version in TFDOC_VERSIONS:
         toolchain_name = "tfdoc_{}_toolchain".format(version)
         tfdoc_toolchain(
@@ -76,11 +75,6 @@ def register_toolchains():
             visibility = ["//visibility:public"],
         )
 
-    native.toolchain_type(
-        name = "tofu_toolchain_type",
-        visibility = ["//visibility:public"],
-    )
-
     for version in TOFU_VERSIONS:
         toolchain_name = "tofu_{}_toolchain".format(version)
         tofu_toolchain(
@@ -93,6 +87,6 @@ def register_toolchains():
             exec_compatible_with = TOFU_VERSIONS[version]["exec_compatible_with"],
             target_compatible_with = TOFU_VERSIONS[version]["target_compatible_with"],
             toolchain = ":{}_impl".format(toolchain_name),
-            toolchain_type = ":tofu_toolchain_type",
+            toolchain_type = ":terraform_toolchain_type",
             visibility = ["//visibility:public"],
         )

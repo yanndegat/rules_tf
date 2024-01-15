@@ -39,7 +39,7 @@ def _impl(ctx):
     )
 
     ctx.actions.run_shell(
-        inputs = [all_versions]+tf_runtime.deps,
+        inputs = [all_versions, tf_runtime.tf],
         outputs = [plugins_mirror],
         use_default_shell_env = True,
         command = "mkdir -p {dir}; {tf} -chdir={versions_dir} providers mirror $PWD/{dir} > /dev/null".format(
@@ -49,7 +49,7 @@ def _impl(ctx):
         )
     )
 
-    runtime_deps = [ plugins_mirror ] + tf_runtime.deps
+    runtime_deps = [ plugins_mirror, tf_runtime.tf]
 
     return [
         DefaultInfo( runfiles = ctx.runfiles(files = runtime_deps)),

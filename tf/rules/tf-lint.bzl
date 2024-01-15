@@ -19,7 +19,7 @@ def _impl(ctx):
 
     deps = ctx.attr.module[TfModuleInfo].transitive_srcs.to_list() + [
         ctx.attr.providers_versions[TfProvidersVersionsInfo].plugins_mirror
-    ] + tflint_runtime.deps + tf_runtime.deps
+    ] + tflint_runtime.deps + [tf_runtime.tf]
 
     ctx.actions.write(
         output = ctx.outputs.executable,
