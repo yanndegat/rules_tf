@@ -22,6 +22,9 @@ def _impl(ctx):
     if tf_version != None and tf_version != "":
         versions["terraform"][0]["required_version"] = tf_version
 
+    if ctx.attr.experiments != None and len(ctx.attr.experiments) > 0:
+        versions["terraform"][0]["experiments"] = ctx.attr.experiments
+
     cmd = "printf '%s' '{json}' > ${{BUILD_WORKSPACE_DIRECTORY:-$PWD}}/{package}/versions.tf.json".format(
         json = json.encode(versions),
         package = ctx.label.package,
@@ -43,6 +46,7 @@ tf_gen_versions = rule(
     implementation = _impl,
     attrs = {
         "providers": attr.string_list(mandatory = False, default = []),
+        "experiments": attr.string_list(mandatory = False, default = []),
         "tf_version": attr.string(mandatory = False, default = ""),
         "providers_versions": attr.label(
             mandatory = False,

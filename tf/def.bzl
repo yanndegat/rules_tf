@@ -20,6 +20,7 @@ def tf_module(name,
               providers = [],
               tflint_config = None,
               deps = [],
+              experiments = [],
               visibility= ["//visibility:public"],
               tags = []):
 
@@ -27,6 +28,7 @@ def tf_module(name,
         name = "gen-tf-versions",
         providers = providers,
         providers_versions  = providers_versions,
+        experiments = experiments,
         visibility = visibility,
         tags = tags,
     )
