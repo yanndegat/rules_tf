@@ -3,7 +3,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.2.3 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.5.7 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | 3.3.2 |
 
 ## Providers

@@ -1,3 +1,5 @@
+load("@rules_tf//tf/toolchains:utils.bzl", "get_sha256sum")
+
 TfdocInfo = provider(
     doc = "Information about how to invoke tfdoc.",
     fields = ["tfdoc", "config", "deps"],
@@ -54,12 +56,26 @@ def _tfdoc_download_impl(ctx):
         executable = False,
     )
 
-    url_template = "https://github.com/terraform-docs/terraform-docs/releases/download/v{version}/terraform-docs-v{version}-{os}-{arch}.tar.gz"
-    url = url_template.format(version = ctx.attr.version, os = ctx.attr.os, arch = ctx.attr.arch)
+    file = "terraform-docs-v{version}-{os}-{arch}.tar.gz".format(version = ctx.attr.version, os = ctx.attr.os, arch = ctx.attr.arch)
+
+    url_template = "https://github.com/terraform-docs/terraform-docs/releases/download/v{version}/{file}"
+    url = url_template.format(version = ctx.attr.version, file = file)
+    url_sha256sums_template = "https://github.com/terraform-docs/terraform-docs/releases/download/v{version}/terraform-docs-v{version}.sha256sum"
+    url_sha256sums = url_sha256sums_template.format(version = ctx.attr.version)
+
+    ctx.download(
+        url = [ url_sha256sums],
+        output = "sha256sums",
+    )
+
+    data = ctx.read("sha256sums")
+    sha256sum = get_sha256sum(data, file)
+    if sha256sum == None or sha256sum == "":
+        fail("Could not find sha256sum for file {}".format(file))
 
     ctx.download_and_extract(
         url = url,
-        sha256 = ctx.attr.sha256,
+        sha256 = sha256sum,
         output = "terraform-docs",
     )
 
@@ -69,7 +85,6 @@ tfdoc_download = repository_rule(
     _tfdoc_download_impl,
     attrs = {
         "version": attr.string(mandatory = True),
-        "sha256": attr.string(mandatory = True),
         "os": attr.string(mandatory = True),
         "arch": attr.string(mandatory = True),
         "config": attr.label(

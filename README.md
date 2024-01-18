@@ -6,17 +6,34 @@ It can typically be used in a terraform monorepo of modules to enforce the
 consistency of providers versions used across all modules, auto generate documentation
 and run lint and validation tests on all your modules.
 
+# Why "Tf" and not "Terraform"
+
+Because now you can either use "tofu" or "terraform" binary.
+
 ## Getting Started
 
 To import rules_tf in your project, you first need to add it to your `MODULE.bazel` file:
 
 ```python
-bazel_dep(name = "rules_tf", version = "0.0.1")
-git_override(
-    module_name = "rules_tf",
-    remote      = "https://github.com/yanndegat/rules_tf",
-    commit      = "200aa83e95eca46976000dfcc1b4b090b2fab06a",
+bazel_dep(name = "rules_tf", version = "0.0.3")
+# git_override(
+#     module_name = "rules_tf",
+#     remote      = "https://github.com/yanndegat/rules_tf",
+#     commit      = "...",
+# )
+
+repos = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
+repos.download( version = "1.5.7", use_tofu = False )
+
+use_repo(
+    repos,
+    "tf_binary",
 )
+
+register_toolchains(
+    "@tf_binary//:toolchain",
+)
+
 ```
 
 Once you've imported the rule set , you can then load the tf rules in your `BUILD` files with:
@@ -41,7 +58,6 @@ tf_module(
     deps = [
         "//tf/modules/mod-a",
     ],
-    
     providers_versions = ":providers",
 )
 ```

@@ -2,7 +2,7 @@ load("@rules_tf//tf/rules:providers.bzl", "TfModuleInfo", "TfProvidersVersionsIn
 
 def _impl(ctx):
     tflint_runtime = ctx.toolchains["@rules_tf//:tflint_toolchain_type"].runtime
-    tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
+    tf_runtime = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
 
     config_file = ""
 
@@ -48,7 +48,7 @@ tf_lint_test = rule(
     },
     test = True,
     toolchains = [
-        "@rules_tf//:terraform_toolchain_type",
+        "@rules_tf//:tf_toolchain_type",
         "@rules_tf//:tflint_toolchain_type",
     ],
 )

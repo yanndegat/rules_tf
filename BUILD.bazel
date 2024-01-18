@@ -1,5 +1,4 @@
 load("@rules_license//rules:license.bzl", "license")
-load("@rules_tf//tf:toolchains.bzl", "register_toolchains")
 
 package(
     default_applicable_licenses = [":license"],
@@ -37,5 +36,17 @@ filegroup(
     visibility = ["//distro:__pkg__"],
 )
 
+toolchain_type(
+   name = "tflint_toolchain_type",
+   visibility = ["//visibility:public"],
+)
 
-register_toolchains()
+toolchain_type(
+   name = "tf_toolchain_type",
+   visibility = ["//visibility:public"],
+)
+
+toolchain_type(
+   name = "tfdoc_toolchain_type",
+   visibility = ["//visibility:public"],
+)

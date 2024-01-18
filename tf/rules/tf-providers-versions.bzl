@@ -1,7 +1,7 @@
 load("@rules_tf//tf/rules:providers.bzl", "TfProvidersVersionsInfo")
 
 def _impl(ctx):
-    tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
+    tf_runtime = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
     providers = {}
 
     plugins_mirror = ctx.actions.declare_directory("plugins_mirror")
@@ -66,5 +66,5 @@ tf_providers_versions = rule(
         "providers": attr.string_dict(mandatory = True),
         "tf_version": attr.string(mandatory = False),
     },
-    toolchains = ["@rules_tf//:terraform_toolchain_type"],
+    toolchains = ["@rules_tf//:tf_toolchain_type"],
 )

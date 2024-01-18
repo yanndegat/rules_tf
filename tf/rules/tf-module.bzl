@@ -141,7 +141,7 @@ tf_module_deps = rule(
 )
 
 def _tf_validate_impl(ctx):
-    tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
+    tf_runtime = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
 
     cmd = "{tf} -chdir={dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror} > /dev/null; {tf} -chdir={dir} validate".format(
         dir = ctx.attr.module.label.package,
@@ -175,14 +175,14 @@ tf_validate_test = rule(
     },
     test = True,
     toolchains = [
-        "@rules_tf//:terraform_toolchain_type",
+        "@rules_tf//:tf_toolchain_type",
     ],
 )
 
 
 def _format_test_impl(ctx):
     module = ctx.attr.module[TfModuleInfo]
-    tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
+    tf_runtime = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
 
     cmd = "{tf} fmt -check -diff {module_path}".format(
         tf = tf_runtime.tf.short_path,
@@ -205,11 +205,11 @@ tf_format_test = rule(
         "module": attr.label(providers = [TfModuleInfo]),
     },
     test = True,
-    toolchains = ["@rules_tf//:terraform_toolchain_type"],
+    toolchains = ["@rules_tf//:tf_toolchain_type"],
 )
 
 def _format_impl(ctx):
-    tf_runtime = ctx.toolchains["@rules_tf//:terraform_toolchain_type"].runtime
+    tf_runtime = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
 
     if len(ctx.attr.modules) < 1:
         fail("you must provide a list of modules")
@@ -237,6 +237,6 @@ tf_format = rule(
             mandatory = True,
         ),
     },
-    toolchains = ["@rules_tf//:terraform_toolchain_type"],
+    toolchains = ["@rules_tf//:tf_toolchain_type"],
     executable = True,
 )
