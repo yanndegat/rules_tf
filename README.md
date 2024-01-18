@@ -22,11 +22,11 @@ bazel_dep(name = "rules_tf", version = "0.0.3")
 #     commit      = "...",
 # )
 
-repos = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
-repos.download( version = "1.5.7", use_tofu = False )
+tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
+tf.download( version = "1.5.7", use_tofu = False )
 
 use_repo(
-    repos,
+    tf,
     "tf_binary",
 )
 
