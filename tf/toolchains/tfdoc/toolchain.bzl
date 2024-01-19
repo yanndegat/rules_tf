@@ -95,3 +95,20 @@ tfdoc_download = repository_rule(
         ),
     },
 )
+
+DECLARE_TOOLCHAIN_CHUNK = """
+tfdoc_toolchain(
+   name = "{toolchain_repo}_toolchain_impl",
+   tfdoc = "@{toolchain_repo}//:runtime",
+   config = "@{toolchain_repo}//:config.yaml",
+)
+
+toolchain(
+  name = "{toolchain_repo}_toolchain",
+  exec_compatible_with = platforms["{os}_{arch}"]["exec_compatible_with"],
+  target_compatible_with = platforms["{os}_{arch}"]["target_compatible_with"],
+  toolchain = ":{toolchain_repo}_toolchain_impl",
+  toolchain_type = "@rules_tf//:tfdoc_toolchain_type",
+  visibility = ["//visibility:public"],
+)
+"""

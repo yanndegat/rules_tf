@@ -2,6 +2,7 @@ load("@rules_tf//tf/toolchains/terraform:toolchain.bzl", "terraform_download")
 load("@rules_tf//tf/toolchains/tflint:toolchain.bzl", "tflint_download")
 load("@rules_tf//tf/toolchains/tfdoc:toolchain.bzl", "tfdoc_download")
 load("@rules_tf//tf/toolchains/tofu:toolchain.bzl", "tofu_download")
+load("@rules_tf//tf:toolchains.bzl", "tf_toolchains")
 load("@rules_tf//tf:versions.bzl", "TERRAFORM_VERSION")
 load("@rules_tf//tf:versions.bzl", "TOFU_VERSION")
 load("@rules_tf//tf:versions.bzl", "TFDOC_VERSION")
@@ -22,51 +23,90 @@ def detect_host_platform(ctx):
 
     return os, arch
 
+def _repo_name(*, module, tool, index, suffix = ""):
+    # Keep the version out of the repository name if possible to prevent unnecessary rebuilds when
+    # it changes.
+    return "{name}_{version}_download_{tool}_{index}{suffix}".format(
+        # "main_" is not a valid module name and thus can't collide.
+        name = module.name or "main_",
+        version = module.version,
+        tool = tool,
+        index = index,
+        suffix = suffix,
+    )
 
-def _tools_repositories(ctx):
+def _tf_repositories(ctx):
     host_detected_os, host_detected_arch = detect_host_platform(ctx)
 
+    tflint_toolchains = []
+    tfdoc_toolchains = []
+    terraform_toolchains = []
+    tofu_toolchains = []
+
     for module in ctx.modules:
+        tfdoc_repo_name = _repo_name(
+            module=module,
+            tool = "tfdoc",
+            index = 0,
+            suffix = "_{}_{}".format(host_detected_os, host_detected_arch),
+        )
         tfdoc_download(
-            name = "tfdoc_binary",
+            name = tfdoc_repo_name,
             version = TFDOC_VERSION,
             os = host_detected_os,
             arch = host_detected_arch,
         )
+        tfdoc_toolchains += [tfdoc_repo_name]
 
+        tflint_repo_name = _repo_name(
+            module=module,
+            tool = "tflint",
+            index = 0,
+            suffix = "_{}_{}".format(host_detected_os, host_detected_arch),
+        )
         tflint_download(
-            name = "tflint_binary",
+            name = tflint_repo_name,
             version = TFLINT_VERSION,
             os = host_detected_os,
             arch = host_detected_arch,
         )
 
-tools_repositories = module_extension(
-    implementation = _tools_repositories,
-    os_dependent = True,
-    arch_dependent = True,
-)
+        tflint_toolchains += [tflint_repo_name]
 
-def _tf_repositories(ctx):
-    host_detected_os, host_detected_arch = detect_host_platform(ctx)
-
-    for module in ctx.modules:
         for index, version_tag in enumerate(module.tags.download):
+            tf_repo_name = _repo_name(
+                module=module,
+                tool = "tf",
+                index = index,
+                suffix = "_{}_{}".format(host_detected_os, host_detected_arch),
+            )
+
             if version_tag.use_tofu:
                 tofu_download(
-                    name = "tf_binary",
+                    name = tf_repo_name,
                     version = version_tag.version,
                     os = host_detected_os,
                     arch = host_detected_arch,
                 )
+                tofu_toolchains += [tf_repo_name]
             else:
                 terraform_download(
-                    name = "tf_binary",
+                    name = tf_repo_name,
                     version = version_tag.version,
                     os = host_detected_os,
                     arch = host_detected_arch,
                 )
+                terraform_toolchains += [tf_repo_name]
 
+    tf_toolchains(
+        name = "tf_toolchains",
+        tflint_repos = tflint_toolchains,
+        tfdoc_repos = tfdoc_toolchains,
+        terraform_repos = terraform_toolchains,
+        tofu_repos = tofu_toolchains,
+        os = host_detected_os,
+        arch = host_detected_arch,
+    )
 
 _version_tag = tag_class(
     attrs = {
@@ -74,7 +114,6 @@ _version_tag = tag_class(
         "version": attr.string(mandatory = True),
     },
 )
-
 
 tf_repositories = module_extension(
     implementation = _tf_repositories,

@@ -77,3 +77,19 @@ terraform_download = repository_rule(
         "arch": attr.string(mandatory = True),
     }
 )
+
+DECLARE_TOOLCHAIN_CHUNK = """
+terraform_toolchain(
+   name = "{toolchain_repo}_toolchain_impl",
+   tf = "@{toolchain_repo}//:runtime",
+)
+
+toolchain(
+  name = "{toolchain_repo}_toolchain",
+  exec_compatible_with = platforms["{os}_{arch}"]["exec_compatible_with"],
+  target_compatible_with = platforms["{os}_{arch}"]["target_compatible_with"],
+  toolchain = ":{toolchain_repo}_toolchain_impl",
+  toolchain_type = "@rules_tf//:tf_toolchain_type",
+  visibility = ["//visibility:public"],
+)
+"""

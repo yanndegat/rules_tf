@@ -9,15 +9,15 @@ local_path_override(
     path = "../..",
 )
 
-repos = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
+tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 
-repos.download( version = "1.5.7", use_tofu = False )
+tf.download( version = "1.5.7", use_tofu = False )
 
 use_repo(
-    repos,
-    "tf_binary",
+    tf,
+    "tf_toolchains",
 )
 
 register_toolchains(
-    "@tf_binary//:toolchain",
+    "@tf_toolchains//:all",
 )

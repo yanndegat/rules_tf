@@ -27,11 +27,11 @@ tf.download( version = "1.5.7", use_tofu = False )
 
 use_repo(
     tf,
-    "tf_binary",
+    "tf_toolchains",
 )
 
 register_toolchains(
-    "@tf_binary//:toolchain",
+    "@tf_toolchains//:all",
 )
 
 ```

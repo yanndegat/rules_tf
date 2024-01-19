@@ -113,3 +113,22 @@ tflint_download = repository_rule(
         ),
     },
 )
+
+
+DECLARE_TOOLCHAIN_CHUNK = """
+tflint_toolchain(
+   name = "{toolchain_repo}_toolchain_impl",
+   tflint = "@{toolchain_repo}//:runtime",
+   config = "@{toolchain_repo}//:config.hcl",
+   wrapper = "@{toolchain_repo}//:wrapper.sh",
+)
+
+toolchain(
+  name = "{toolchain_repo}_toolchain",
+  exec_compatible_with = platforms["{os}_{arch}"]["exec_compatible_with"],
+  target_compatible_with = platforms["{os}_{arch}"]["target_compatible_with"],
+  toolchain = ":{toolchain_repo}_toolchain_impl",
+  toolchain_type = "@rules_tf//:tflint_toolchain_type",
+  visibility = ["//visibility:public"],
+)
+"""

@@ -12,15 +12,13 @@ bazel_dep(name = "rules_license", version = "0.0.7")
 
 bazel_dep(name = "rules_python", version = "0.24.0", dev_dependency = True)
 
-tools_repos = use_extension("@rules_tf//tf:extensions.bzl", "tools_repositories")
+tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 
 use_repo(
-    tools_repos,
-    "tfdoc_binary",
-    "tflint_binary",
+    tf,
+    "tf_toolchains",
 )
 
 register_toolchains(
-    "@tfdoc_binary//:toolchain",
-    "@tflint_binary//:toolchain",
+    "@tf_toolchains//:all",
 )
