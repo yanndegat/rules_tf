@@ -1,10 +1,8 @@
 # Tf Rules
 
-The Tf rules is useful to validate, lint and format terraform code.
+The Tf rules are useful to validate, lint and format terraform code.
 
-It can typically be used in a terraform monorepo of modules to enforce the 
-consistency of providers versions used across all modules, auto generate documentation
-and run lint and validation tests on all your modules.
+They can typically be used in a terraform monorepo of modules to lint, run validation tests, auto generate documentation and enforce the consistency of providers versions across all modules.
 
 # Why "Tf" and not "Terraform"
 
@@ -15,7 +13,7 @@ Because now you can either use "tofu" or "terraform" binary.
 To import rules_tf in your project, you first need to add it to your `MODULE.bazel` file:
 
 ```python
-bazel_dep(name = "rules_tf", version = "0.0.3")
+bazel_dep(name = "rules_tf", version = "0.0.4")
 # git_override(
 #     module_name = "rules_tf",
 #     remote      = "https://github.com/yanndegat/rules_tf",
@@ -24,6 +22,10 @@ bazel_dep(name = "rules_tf", version = "0.0.3")
 
 tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 tf.download( version = "1.5.7", use_tofu = False )
+
+# Switch to tofu
+# tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
+# tf.download( version = "1.6.0", use_tofu = True )
 
 use_repo(
     tf,
