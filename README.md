@@ -30,10 +30,20 @@ use_repo(
     "tf_toolchains",
 )
 
-register_toolchains(
-    "@tf_toolchains//:all",
+plugins_mirror = use_extension("@rules_tf//tf:extensions.bzl", "plugins_mirror")
+plugins_mirror.versions(
+    name = "tf_plugins_mirror",
+    versions = {
+        "random" : "hashicorp/random:3.3.2",
+        "null"   : "hashicorp/null:3.1.1",
+    }
 )
 
+use_repo(plugins_mirror, "tf_plugins_mirror")
+register_toolchains(
+    "@tf_toolchains//:all",
+    "@tf_plugins_mirror//:all",
+)
 ```
 
 Once you've imported the rule set , you can then load the tf rules in your `BUILD` files with:
@@ -45,8 +55,8 @@ tf_providers_versions(
     name = "providers",
     tf_version = "1.2.3",
     providers = {
-        "random" : "hashicorp/random:3.3.2",
-        "null"   : "hashicorp/null:3.1.1",
+        "random" : "hashicorp/random:>=3.3",
+        "null"   : "hashicorp/null:>=3.1",
     },
 )
 

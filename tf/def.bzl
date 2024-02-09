@@ -14,7 +14,7 @@ bzl_files = [
 ]
 
 def tf_module(name,
-              providers_versions,
+              providers_versions = None,
               data = [],
               size="small",
               providers = [],
@@ -65,7 +65,6 @@ def tf_module(name,
     tf_lint_test(
         name = "lint",
         module = ":module",
-        providers_versions  = providers_versions,
         config = tflint_config,
         size = size,
         tags = tags,
@@ -74,7 +73,6 @@ def tf_module(name,
     tf_validate_test(
         name = "validate",
         module = ":module",
-        providers_versions  = providers_versions,
         size = size,
         tags = tags,
     )

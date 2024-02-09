@@ -6,6 +6,7 @@ load("@rules_tf//tf/toolchains/tfdoc:toolchain.bzl", _tfdoc_toolchain = "tfdoc_t
 load("@rules_tf//tf/toolchains/tfdoc:toolchain.bzl", _tfdoc_declare_toolchain_chunk = "DECLARE_TOOLCHAIN_CHUNK")
 load("@rules_tf//tf/toolchains/tflint:toolchain.bzl", _tflint_toolchain = "tflint_toolchain")
 load("@rules_tf//tf/toolchains/tflint:toolchain.bzl", _tflint_declare_toolchain_chunk = "DECLARE_TOOLCHAIN_CHUNK")
+load("@rules_tf//tf/toolchains/plugins_mirror:toolchain.bzl", _plugins_mirror_toolchain = "plugins_mirror_toolchain")
 
 platforms = {
     "linux_amd64": {
@@ -71,6 +72,7 @@ terraform_toolchain = _terraform_toolchain
 tofu_toolchain = _tofu_toolchain
 tfdoc_toolchain = _tfdoc_toolchain
 tflint_toolchain = _tflint_toolchain
+plugins_mirror_toolchain = _plugins_mirror_toolchain
 
 def _tf_toolchains_impl(ctx):
     content = """

@@ -3,6 +3,7 @@ load("@rules_tf//tf/rules:providers.bzl", "TfModuleInfo", "TfProvidersVersionsIn
 def _impl(ctx):
     tflint_runtime = ctx.toolchains["@rules_tf//:tflint_toolchain_type"].runtime
     tf_runtime = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
+    tf_plugins_mirror = ctx.toolchains["@rules_tf//:tf_plugins_mirror_toolchain_type"].runtime.dir
 
     config_file = ""
 
@@ -14,12 +15,10 @@ def _impl(ctx):
         runner = tflint_runtime.runner.path,
         mod_dir = ctx.label.package,
         config_file = config_file,
-        plugins_mirror = ctx.attr.providers_versions[TfProvidersVersionsInfo].plugins_mirror.short_path,
+        plugins_mirror = tf_plugins_mirror.short_path,
     )
 
-    deps = ctx.attr.module[TfModuleInfo].transitive_srcs.to_list() + [
-        ctx.attr.providers_versions[TfProvidersVersionsInfo].plugins_mirror
-    ] + tflint_runtime.deps + [tf_runtime.tf]
+    deps = ctx.attr.module[TfModuleInfo].transitive_srcs.to_list() + tflint_runtime.deps + [tf_runtime.tf, tf_plugins_mirror]
 
     ctx.actions.write(
         output = ctx.outputs.executable,
@@ -37,17 +36,13 @@ tf_lint_test = rule(
     implementation = _impl,
     attrs = {
         "module": attr.label(providers = [TfModuleInfo], allow_files = True),
-        "providers_versions": attr.label(
-            providers = [TfProvidersVersionsInfo],
-            allow_files = True,
-            mandatory = True,
-        ),
         "config": attr.label(
             allow_single_file = True,
         ),
     },
     test = True,
     toolchains = [
+        "@rules_tf//:tf_plugins_mirror_toolchain_type",
         "@rules_tf//:tf_toolchain_type",
         "@rules_tf//:tflint_toolchain_type",
     ],

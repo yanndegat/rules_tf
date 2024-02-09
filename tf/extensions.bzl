@@ -2,6 +2,7 @@ load("@rules_tf//tf/toolchains/terraform:toolchain.bzl", "terraform_download")
 load("@rules_tf//tf/toolchains/tflint:toolchain.bzl", "tflint_download")
 load("@rules_tf//tf/toolchains/tfdoc:toolchain.bzl", "tfdoc_download")
 load("@rules_tf//tf/toolchains/tofu:toolchain.bzl", "tofu_download")
+load("@rules_tf//tf/toolchains/plugins_mirror:toolchain.bzl", _plugins_mirror = "plugins_mirror")
 load("@rules_tf//tf:toolchains.bzl", "tf_toolchains")
 load("@rules_tf//tf:versions.bzl", "TERRAFORM_VERSION")
 load("@rules_tf//tf:versions.bzl", "TOFU_VERSION")
@@ -123,3 +124,28 @@ tf_repositories = module_extension(
     os_dependent = True,
     arch_dependent = True,
 )
+
+
+def _plugins_mirror_ext_impl(ctx):
+    for module in ctx.modules:
+        for index, version_tag in enumerate(module.tags.versions):
+            _plugins_mirror(
+                name = version_tag.name,
+                versions = version_tag.versions,
+            )
+
+
+_plugins_mirror_tag = tag_class(attrs = {
+    "name": attr.string(mandatory = True),
+    "versions": attr.string_dict(mandatory = True),
+})
+
+plugins_mirror = module_extension(
+    implementation = _plugins_mirror_ext_impl,
+    tag_classes = {
+        "versions": _plugins_mirror_tag,
+    },
+    os_dependent = True,
+    arch_dependent = True,
+)
+

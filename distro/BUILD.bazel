@@ -41,6 +41,7 @@ pkg_tar(
         "//tf/toolchains/tfdoc:standard_package",
         "//tf/toolchains/tflint:standard_package",
         "//tf/toolchains/tofu:standard_package",
+        "//tf/toolchains/plugins_mirror:standard_package",
     ],
     extension = "tar.gz",
     # It is all source code, so make it read-only.

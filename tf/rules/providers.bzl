@@ -13,7 +13,6 @@ TfProvidersVersionsInfo = provider(
     fields = [
         "providers",
         "tf_version",
-        "plugins_mirror",
     ],
 )
 
