@@ -73,23 +73,26 @@ plugins_mirror_toolchain = rule(
 
 
 def _impl(ctx):
-    ctx.report_progress("Building local tf plugins mirror")
-
-    ctx.template(
-        "BUILD",
-        Label("@rules_tf//tf/toolchains/plugins_mirror:BUILD.toolchain.tpl"),
-        executable = False,
-        substitutions = {
-            "{name}": ctx.attr.name,
-            "{versions}": ",".join(["'{}': '{}'".format(k, ctx.attr.versions[k]) for k in ctx.attr.versions]),
-        },
-    )
-
+    ctx.file( "BUILD", executable = False, )
     return
 
 plugins_mirror = repository_rule(
     implementation = _impl,
-    attrs = {
-        "versions": attr.string_dict(mandatory = True),
-    },
 )
+
+DECLARE_TOOLCHAIN_CHUNK = """
+plugins_mirror_toolchain(
+   name = "{toolchain_repo}_toolchain_impl",
+   versions = {{
+      {versions}
+   }},
+   tags = ["no-sandbox"],
+)
+
+toolchain(
+  name = "{toolchain_repo}_toolchain",
+  toolchain = ":{toolchain_repo}_toolchain_impl",
+  toolchain_type = "@rules_tf//:tf_plugins_mirror_toolchain_type",
+  visibility = ["//visibility:public"],
+)
+"""

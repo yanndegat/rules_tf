@@ -3,7 +3,7 @@ load("@rules_tf//tf/toolchains/tflint:toolchain.bzl", "tflint_download")
 load("@rules_tf//tf/toolchains/tfdoc:toolchain.bzl", "tfdoc_download")
 load("@rules_tf//tf/toolchains/tofu:toolchain.bzl", "tofu_download")
 load("@rules_tf//tf/toolchains/plugins_mirror:toolchain.bzl", _plugins_mirror = "plugins_mirror")
-load("@rules_tf//tf:toolchains.bzl", "tf_toolchains")
+load("@rules_tf//tf:toolchains.bzl", "tf_toolchains", "tf_plugins_mirrors_toolchains")
 load("@rules_tf//tf:versions.bzl", "TERRAFORM_VERSION")
 load("@rules_tf//tf:versions.bzl", "TOFU_VERSION")
 load("@rules_tf//tf:versions.bzl", "TFDOC_VERSION")
@@ -127,13 +127,27 @@ tf_repositories = module_extension(
 
 
 def _plugins_mirror_ext_impl(ctx):
+    mirror_toolchains = {}
+
     for module in ctx.modules:
         for index, version_tag in enumerate(module.tags.versions):
-            _plugins_mirror(
-                name = version_tag.name,
-                versions = version_tag.versions,
+            repo_name = _repo_name(
+                module = module,
+                tool = "tf_plugins_mirror",
+                index = index,
+                suffix = version_tag.name,
             )
 
+            _plugins_mirror(
+                name = repo_name,
+            )
+
+            mirror_toolchains[repo_name] = ",".join(["'{}': '{}'".format(k, version_tag.versions[k]) for k in version_tag.versions])
+
+    tf_plugins_mirrors_toolchains(
+        name = "tf_plugins_mirrors",
+        mirror_repos = mirror_toolchains,
+    )
 
 _plugins_mirror_tag = tag_class(attrs = {
     "name": attr.string(mandatory = True),

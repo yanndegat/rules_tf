@@ -27,24 +27,22 @@ tf.download( version = "1.5.7", use_tofu = False )
 # tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 # tf.download( version = "1.6.0", use_tofu = True )
 
-use_repo(
-    tf,
-    "tf_toolchains",
-)
+use_repo(tf, "tf_toolchains")
 
 plugins_mirror = use_extension("@rules_tf//tf:extensions.bzl", "plugins_mirror")
 plugins_mirror.versions(
-    name = "tf_plugins_mirror",
+    name = "default",
     versions = {
         "random" : "hashicorp/random:3.3.2",
         "null"   : "hashicorp/null:3.1.1",
     }
 )
 
-use_repo(plugins_mirror, "tf_plugins_mirror")
+use_repo(plugins_mirror, "tf_plugins_mirrors")
+
 register_toolchains(
     "@tf_toolchains//:all",
-    "@tf_plugins_mirror//:all",
+    "@tf_plugins_mirrors//:all",
 )
 ```
 
