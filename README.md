@@ -20,7 +20,7 @@ bazel_dep(name = "rules_tf", version = "0.0.5")
 #     commit      = "...",
 # )
 
-tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
+tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories", dev_dependency = True)
 tf.download( version = "1.5.7", use_tofu = False )
 
 # Switch to tofu
@@ -29,7 +29,7 @@ tf.download( version = "1.5.7", use_tofu = False )
 
 use_repo(tf, "tf_toolchains")
 
-plugins_mirror = use_extension("@rules_tf//tf:extensions.bzl", "plugins_mirror")
+plugins_mirror = use_extension("@rules_tf//tf:extensions.bzl", "plugins_mirror", dev_dependency = True)
 plugins_mirror.versions(
     name = "default",
     versions = {
@@ -43,6 +43,7 @@ use_repo(plugins_mirror, "tf_plugins_mirrors")
 register_toolchains(
     "@tf_toolchains//:all",
     "@tf_plugins_mirrors//:all",
+    dev_dependency = True,
 )
 ```
 
