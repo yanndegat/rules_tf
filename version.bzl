@@ -13,5 +13,5 @@
 # limitations under the License.
 """The version of rules_tf."""
 
-next_version = "0.0.6"
-previous_version = "0.0.5"
+next_version = "0.0.7"
+previous_version = "0.0.6"
