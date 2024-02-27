@@ -1,31 +1,5 @@
 load("@rules_tf//tf/toolchains:utils.bzl", "get_sha256sum")
 
-TofuInfo = provider(
-    doc = "Information about how to invoke Tofu.",
-    fields = ["tf"],
-)
-
-def _tofu_toolchain_impl(ctx):
-    toolchain_info = platform_common.ToolchainInfo(
-        runtime = TofuInfo(
-            tf = ctx.file.tf,
-        ),
-    )
-    return [toolchain_info]
-
-tofu_toolchain = rule(
-    implementation = _tofu_toolchain_impl,
-    attrs = {
-        "tf": attr.label(
-            mandatory = True,
-            allow_single_file = True,
-            executable = True,
-            cfg = "target",
-        ),
-    },
-)
-
-
 def _download_impl(ctx):
     ctx.report_progress("Downloading tofu")
 
@@ -65,6 +39,42 @@ def _download_impl(ctx):
         output = "tofu",
     )
 
+    providers = {}
+    for k in ctx.attr.mirror:
+        v = ctx.attr.mirror[k]
+        elems = v.split(":")
+        if len(elems) != 2:
+            fail("provider version format must be org/provider:x.y.x, was: %s".format(v))
+
+        provider_elems = elems[0].split("/")
+        if len(provider_elems) != 2:
+            fail("provider version format must be org/provider:x.y.z, was: %s".format(v))
+
+        version = elems[1]
+        version_elems = version.split(".")
+        if len(version_elems) != 3:
+            fail("provider version format must be org/provider:x.y.z, was: %s".format(v))
+
+        providers[k] = {
+            "source": elems[0], "version": elems[1],
+        }
+
+    versions_tf = {
+        "terraform": [
+            {
+                "required_providers": [dict([(p, providers[p]) for p in providers ])],
+            }
+        ]
+    }
+
+    ctx.file("versions.tf.json", content = json.encode(versions_tf))
+
+    ctx.execute([
+        "bash",
+        "-c",
+        "mkdir -p mirror; tofu/tofu providers mirror ./mirror > /dev/null",
+        ])
+
     return
 
 tofu_download = repository_rule(
@@ -73,13 +83,15 @@ tofu_download = repository_rule(
         "version": attr.string(mandatory = True),
         "os": attr.string(mandatory = True),
         "arch": attr.string(mandatory = True),
+        "mirror": attr.string_dict(mandatory = True),
     },
 )
 
 DECLARE_TOOLCHAIN_CHUNK = """
-tofu_toolchain(
+tf_toolchain(
    name = "{toolchain_repo}_toolchain_impl",
    tf = "@{toolchain_repo}//:runtime",
+   mirror = "@{toolchain_repo}//:mirror",
 )
 
 toolchain(

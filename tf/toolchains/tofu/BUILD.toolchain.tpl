@@ -5,3 +5,7 @@ filegroup(
     srcs = ["tofu/tofu"],
     visibility = ["//visibility:public"]
 )
+
+exports_files(
+     ["mirror"],
+)

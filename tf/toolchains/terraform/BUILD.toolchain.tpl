@@ -5,3 +5,7 @@ filegroup(
     srcs = ["terraform/terraform"],
     visibility = ["//visibility:public"]
 )
+
+exports_files(
+     ["mirror"],
+)

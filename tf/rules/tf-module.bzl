@@ -142,12 +142,11 @@ tf_module_deps = rule(
 
 def _tf_validate_impl(ctx):
     tf_runtime = ctx.toolchains["@rules_tf//:tf_toolchain_type"].runtime
-    tf_plugins_mirror = ctx.toolchains["@rules_tf//:tf_plugins_mirror_toolchain_type"].runtime.dir
 
     cmd = "{tf} -chdir={dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror} > /dev/null; {tf} -chdir={dir} validate".format(
         dir = ctx.attr.module.label.package,
         tf = tf_runtime.tf.path,
-        plugins_mirror = tf_plugins_mirror.short_path,
+        plugins_mirror = tf_runtime.mirror.path,
     )
 
     ctx.actions.write(
@@ -155,10 +154,7 @@ def _tf_validate_impl(ctx):
         content = cmd,
     )
 
-    deps = ctx.attr.module[TfModuleInfo].transitive_srcs.to_list() + [
-        tf_plugins_mirror,
-        tf_runtime.tf,
-    ]
+    deps = ctx.attr.module[TfModuleInfo].transitive_srcs.to_list() + tf_runtime.deps
 
     return [DefaultInfo(
         runfiles = ctx.runfiles(files = deps),
@@ -171,7 +167,6 @@ tf_validate_test = rule(
     },
     test = True,
     toolchains = [
-        "@rules_tf//:tf_plugins_mirror_toolchain_type",
         "@rules_tf//:tf_toolchain_type",
     ],
 )
