@@ -13,7 +13,7 @@ Because now you can either use "tofu" or "terraform" binary.
 To import rules_tf in your project, you first need to add it to your `MODULE.bazel` file:
 
 ```python
-bazel_dep(name = "rules_tf", version = "0.0.6")
+bazel_dep(name = "rules_tf", version = "0.0.7")
 # git_override(
 #     module_name = "rules_tf",
 #     remote      = "https://github.com/yanndegat/rules_tf",
@@ -23,6 +23,8 @@ bazel_dep(name = "rules_tf", version = "0.0.6")
 tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories", dev_dependency = True)
 tf.download( 
     version = "1.5.7", 
+    tflint_version = "0.51.1", 
+    tfdoc_version = "0.18.0", 
     use_tofu = False,
     versions = {
         "random" : "hashicorp/random:3.3.2",
