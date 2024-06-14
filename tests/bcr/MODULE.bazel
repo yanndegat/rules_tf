@@ -12,6 +12,7 @@ local_path_override(
 tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 tf.download(
     version = "1.5.7",
+    tflint_version = "0.51.1",
     use_tofu = False,
     mirror = {
         "random" : "hashicorp/random:3.3.2",
