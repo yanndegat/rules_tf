@@ -145,8 +145,8 @@ def _tf_validate_impl(ctx):
 
     cmd = "{tf} -chdir={dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror} > /dev/null; {tf} -chdir={dir} validate".format(
         dir = ctx.attr.module.label.package,
-        tf = tf_runtime.tf.path,
-        plugins_mirror = tf_runtime.mirror.path,
+        tf = tf_runtime.tf.short_path,
+        plugins_mirror = tf_runtime.mirror.short_path,
     )
 
     ctx.actions.write(
