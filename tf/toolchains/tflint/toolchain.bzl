@@ -90,12 +90,15 @@ def _tflint_download_impl(ctx):
     if sha256sum == None or sha256sum == "":
         fail("Could not find sha256sum for file {}".format(file))
 
-    ctx.download_and_extract(
+    res = ctx.download_and_extract(
         url = url,
         sha256 = sha256sum,
         type = "zip",
         output = "tflint",
     )
+
+    if not res.success:
+        fail("!failed to dl: ", url)
 
     return
 

@@ -9,12 +9,15 @@ def _impl(ctx):
     if ctx.file.config != None:
         config_file = ctx.file.config.short_path
 
-    cmd = "{tf} -chdir={mod_dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror} > /dev/null; {runner} {mod_dir} {config_file}".format(
+    extra_args = [arg for arg in ctx.attr.extra_args if not arg.startswith("--chdir")]
+
+    cmd = "{tf} -chdir={mod_dir} init -backend=false -input=false -plugin-dir=$PWD/{plugins_mirror} > /dev/null; {runner} '{mod_dir}' '{config_file}' {extra_args}".format(
         tf = tf_runtime.tf.path,
         runner = tflint_runtime.runner.path,
         mod_dir = ctx.label.package,
         config_file = config_file,
         plugins_mirror = tf_runtime.mirror.path,
+        extra_args = " ".join(extra_args),
     )
 
     deps = ctx.attr.module[TfModuleInfo].transitive_srcs.to_list() + tflint_runtime.deps + tf_runtime.deps
@@ -35,6 +38,7 @@ tf_lint_test = rule(
     implementation = _impl,
     attrs = {
         "module": attr.label(providers = [TfModuleInfo], allow_files = True),
+        "extra_args": attr.string_list(default = []),
         "config": attr.label(
             allow_single_file = True,
         ),

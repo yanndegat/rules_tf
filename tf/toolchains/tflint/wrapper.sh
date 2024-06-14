@@ -3,6 +3,8 @@ set -eEuo pipefail
 
 WORKDIR="${1:-}"
 CUSTOM_CONFIG="${2:-}"
+shift
+shift
 
 if [[ ! -d "${WORKDIR}" ]]; then
     echo >&2 "usage: $0 WORKDIR CUSTOM_CONFIG"
@@ -21,4 +23,4 @@ if [[ ! -f "${TFLINT_CONFIG_FILE}" ]]; then
     exit 1
 fi
 
-exec "${TFLINT_DIR}/tflint/tflint" --chdir="$WORKDIR" --config="${TFLINT_CONFIG_FILE}"
+exec "${TFLINT_DIR}/tflint/tflint" --chdir="$WORKDIR" --config="${TFLINT_CONFIG_FILE}" "$@"

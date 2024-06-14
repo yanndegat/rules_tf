@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Test
-        run: bazel test //...
+        run: bazel query "tests(//...)" | xargs -n1 bazel test
         working-directory: tests/bcr
 
   test-mac:
@@ -27,5 +27,5 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Test
-        run: bazel test //...
+        run: bazel query "tests(//...)" | xargs -n1 bazel test
         working-directory: tests/bcr
