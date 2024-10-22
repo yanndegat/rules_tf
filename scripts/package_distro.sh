@@ -7,9 +7,9 @@
 set -eEuo pipefail
 
 if [[ "$(git rev-parse --is-shallow-repository)" != "false" ]]; then
-   git fetch --unshallow --tags
+   git fetch --prune-tags --force --unshallow --tags
 else
-    git fetch --tags
+   git fetch --prune-tags --force --tags
 fi
 
 bazel build //distro/...
