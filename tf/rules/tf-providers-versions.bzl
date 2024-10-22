@@ -5,13 +5,20 @@ def _impl(ctx):
     providers = {}
     for k in ctx.attr.providers:
         v = ctx.attr.providers[k]
+        if v == "terraform.io/builtin/terraform":
+            # special case of builtin provider
+            providers[k] = {
+                "source": v,
+            }
+            continue
+
         elems = v.split(":")
         if len(elems) != 2:
-            fail("provider version format must be org/provider:version, was: %s".format(v))
+            fail("provider version format must be [hostname/]org/provider:version, was: %s".format(v))
 
         provider_elems = elems[0].split("/")
-        if len(provider_elems) != 2:
-            fail("provider version format must be org/provider:version, was: %s".format(v))
+        if len(provider_elems) < 2 or len(provider_elems) > 3:
+            fail("provider version format must be [hostname/]org/provider:version, was: %s".format(v))
 
         providers[k] = {
             "source": elems[0], "version": elems[1],

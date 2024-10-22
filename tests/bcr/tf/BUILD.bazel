@@ -6,6 +6,7 @@ tf_providers_versions(
     providers = {
         "random" : "hashicorp/random:3.3.2",
         "null"   : "hashicorp/null:3.1.1",
+        "terraform"   : "terraform.io/builtin/terraform",
     },
 )
 

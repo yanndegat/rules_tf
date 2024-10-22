@@ -57,5 +57,9 @@ rule "terraform_unused_declarations" {
 }
 
 rule "terraform_unused_required_providers" {
-  enabled = true
+# tf lint support for provider functions is implemented but not released
+# by the time of this patch (tflint v0.9.1). Once released, please enable
+# cf https://github.com/terraform-linters/tflint-ruleset-terraform/pull/214
+# enabled = true
+  enabled = false
 }

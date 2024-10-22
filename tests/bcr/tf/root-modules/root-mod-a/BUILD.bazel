@@ -4,9 +4,11 @@ tf_module(
     name = "root-mod-a",
     providers = [
         "random",
+        "terraform",
     ],
     deps = [
         "//tf/modules/mod-a",
     ],
     providers_versions = "//tf:versions",
+    tflint_config = "//tf:tflint-custom-config",
 )
