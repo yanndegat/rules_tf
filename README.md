@@ -26,7 +26,7 @@ tf.download(
     tflint_version = "0.53.0", 
     tfdoc_version = "0.19.0", 
     use_tofu = False,
-    versions = {
+    mirror = {
         "random" : "hashicorp/random:3.3.2",
         "null"   : "hashicorp/null:3.1.1",
     } 
