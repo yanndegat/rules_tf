@@ -15,7 +15,7 @@ def _artifact_impl(ctx):
             package = ctx.attr.package,
         ),
         ctx.attr.module[TfModuleInfo],
-        ctx.attr.package[PackageArtifactInfo],
+        ctx.attr.package[OutputGroupInfo],
     ]
 
 
@@ -23,7 +23,7 @@ tf_artifact = rule(
     implementation = _artifact_impl,
     attrs = {
         "module": attr.label(providers = [TfModuleInfo], mandatory = True,),
-        "package": attr.label(providers = [PackageArtifactInfo], mandatory = True, allow_single_file = True),
+        "package": attr.label(providers = [OutputGroupInfo], mandatory = True, allow_single_file = True),
     },
 )
 
