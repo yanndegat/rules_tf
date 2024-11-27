@@ -10,22 +10,45 @@ on:  # yamllint disable rule:truthy
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  tests:
+    strategy:
+      matrix:
+        bazel-version:
+          - 6.x
+          - 7.x
+          - 8.0.0rc4
+        runner:
+          - ubuntu-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup
+        run: |
+          echo "USE_BAZEL_VERSION=${BAZEL_VERSION}" > .bazeliskrc
+        env:
+          BAZEL_VERSION: ${{matrix.bazel-version}}
+        working-directory: tests/bcr
+
+      - name: Install bazelisk
+        uses: yuyawk/github-actions/install-bazelisk@v1
 
       - name: Test
         run: bazel query "tests(//...)" | xargs -n1 bazel test
         working-directory: tests/bcr
 
-  test-mac:
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Test
-        run: bazel query "tests(//...)" | xargs -n1 bazel test
+      - name: Test run fmt
+        run: bazel query 'kind("tf_format rule", //...)' | xargs -n1 bazel run
         working-directory: tests/bcr
+
+      - name: Test run gendoc
+        run: bazel query 'kind("tf_gen_doc rule", //...)' | xargs -n1 bazel run
+        working-directory: tests/bcr
+
+      - name: Test run genversions
+        run: |
+          bazel query 'kind(tf_gen_version, //...)' | xargs bazel build
+          bazel cquery 'kind(tf_gen_versions, //...)' --output files | xargs -n1 bash

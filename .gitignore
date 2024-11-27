@@ -2,3 +2,7 @@
 /tests/bcr/bazel-*
 .DS_STORE
 .ijwb/
+/MODULE.bazel.lock
+/tests/bcr/MODULE.bazel.lock
+/tests/bcr/.bazeliskrc
+/tests/bcr/.bazelversion
