@@ -12,8 +12,9 @@ def _impl(ctx):
 
     cmd = "for mod in {mods}; do {tfdoc} -c {config} markdown ${{BUILD_WORKSPACE_DIRECTORY}}/${{mod}}; done".format(
         mods  = " ".join([p.label.package for p in ctx.attr.modules]),
-        tfdoc = tfdoc_runtime.tfdoc.path,
-        config = config_file.path,
+        tfdoc = tfdoc_runtime.tfdoc.short_path,
+        tfdoc_short = tfdoc_runtime.tfdoc.short_path,
+        config = config_file.short_path,
     )
 
     ctx.actions.write(

@@ -3,7 +3,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5, <= 1.7 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9, <= 1.10 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | 3.3.2 |
 
 ## Providers
@@ -16,6 +16,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_a2ndmodule"></a> [a2ndmodule](#module\_a2ndmodule) | ../../modules/mod-a | n/a |
 | <a name="module_amodule"></a> [amodule](#module\_amodule) | ../../modules/mod-a | n/a |
 
 ## Resources
