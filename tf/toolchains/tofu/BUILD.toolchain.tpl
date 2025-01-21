@@ -1,8 +1,8 @@
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
+alias(
     name = "runtime",
-    srcs = ["tofu/tofu"],
+    actual = "tofu/tofu",
     visibility = ["//visibility:public"]
 )
 
