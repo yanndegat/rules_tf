@@ -2,8 +2,8 @@ package(default_visibility = ["//visibility:public"])
 
 exports_files(["config.hcl", "wrapper.sh"])
 
-filegroup(
+alias(
     name = "runtime",
-    srcs = ["tflint/tflint"],
+    actual = "tflint/tflint",
     visibility = ["//visibility:public"]
 )

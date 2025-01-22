@@ -1,8 +1,8 @@
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
+alias(
     name = "runtime",
-    srcs = ["terraform/terraform"],
+    actual = "terraform/terraform",
     visibility = ["//visibility:public"]
 )
 

@@ -2,8 +2,8 @@ package(default_visibility = ["//visibility:public"])
 
 exports_files(["config.yaml"])
 
-filegroup(
+alias(
     name = "runtime",
-    srcs = ["terraform-docs/terraform-docs"],
-    visibility = ["//visibility:public"]
+    actual = "terraform-docs/terraform-docs",
+    visibility = ["//visibility:public"],
 )

@@ -105,4 +105,9 @@ toolchain(
   toolchain_type = "@rules_tf//:tf_toolchain_type",
   visibility = ["//visibility:public"],
 )
+
+alias(
+    name = "tofu",
+    actual = "@{toolchain_repo}//:runtime",
+)
 """

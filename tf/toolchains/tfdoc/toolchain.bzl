@@ -114,4 +114,9 @@ toolchain(
   toolchain_type = "@rules_tf//:tfdoc_toolchain_type",
   visibility = ["//visibility:public"],
 )
+
+alias(
+    name = "tfdoc",
+    actual = "@{toolchain_repo}//:runtime",
+)
 """

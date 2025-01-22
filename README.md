@@ -2,7 +2,7 @@
 
 The Tf rules are useful to validate, lint and format terraform code.
 
-They can typically be used in a terraform monorepo of modules to lint, run validation tests, auto generate documentation and enforce the consistency of providers versions across all modules.
+They can typically be used in a terraform monorepo of modules to lint, run validation tests, auto generate documentation and enforce the consistency of Tf and providers versions across all modules.
 
 # Why "Tf" and not "Terraform"
 
@@ -50,7 +50,9 @@ register_toolchains(
 )
 ```
 
-Once you've imported the rule set , you can then load the tf rules in your `BUILD` files with:
+### Using Tf rules
+
+Once you've imported the rule set, you can then load the tf rules in your `BUILD` files with:
 
 ```python
 load("@rules_tf//tf:def.bzl", "tf_providers_versions", "tf_module")
@@ -75,6 +77,20 @@ tf_module(
     providers_versions = ":providers",
 )
 ```
+
+### Using prebuilt binaries
+
+To ensure a consistent binary version across the team, you can create an alias to the prebuilt binaries:
+
+```python
+# Likewise for tofu, tfdoc, and tflint.
+alias(
+    name = "terraform",
+    actual = "@tf_toolchains//:terraform",
+)
+```
+
+And you can use `bazel run //:terraform` which uses the same version as configured in your `MODULE.bazel`.
 
 ## Using Tf Modules
 
