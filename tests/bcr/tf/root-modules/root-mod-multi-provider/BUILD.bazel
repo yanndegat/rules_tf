@@ -1,0 +1,13 @@
+load("@rules_tf//tf:def.bzl", "tf_module")
+
+tf_module(
+    name = "root-mod-multi-provider",
+    providers = [
+        "random",
+    ],
+    deps = [
+        "//tf/modules/multi_provider",
+    ],
+    providers_versions = "//tf:versions",
+    tflint_config = "//tf:tflint-custom-config",
+)

@@ -21,21 +21,21 @@ bazel_dep(name = "rules_tf", version = "0.0.9")
 # )
 
 tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories", dev_dependency = True)
-tf.download( 
-    version = "1.9.5", 
-    tflint_version = "0.53.0", 
-    tfdoc_version = "0.19.0", 
+tf.download(
+    version = "1.9.5",
+    tflint_version = "0.53.0",
+    tfdoc_version = "0.19.0",
     use_tofu = False,
     mirror = {
         "random" : "hashicorp/random:3.3.2",
         "null"   : "hashicorp/null:3.1.1",
-    } 
+    }
 )
 
 # Switch to tofu
 # tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
-# tf.download( 
-#    version = "1.6.0", 
+# tf.download(
+#    version = "1.6.0",
 #    use_tofu = True,
 #    mirror = {
 #        "random" : "hashicorp/random:3.3.2",
@@ -78,6 +78,67 @@ tf_module(
 )
 ```
 
+#### Provider Configuration Aliases
+
+The `providers` parameter supports both string list format and dictionary format (for configuration aliases):
+
+```python
+# String list format (legacy)
+tf_module(
+    name = "simple-module",
+    providers = [
+        "random",
+        "null",
+    ],
+    providers_versions = ":providers",
+)
+
+# Dictionary format (for provider aliases)
+tf_module(
+    name = "multi-provider-module",
+    providers = {
+        "random": {
+            "configuration_aliases": ["random.primary", "random.secondary"]
+        },
+        "aws": {
+            "configuration_aliases": ["aws.us_east_1", "aws.us_west_2"]
+        }
+    },
+    providers_versions = ":providers",
+)
+```
+
+The dictionary format allows you to specify `configuration_aliases` for providers that need multiple configurations, which is useful for multi-region deployments or when a module needs to work with multiple instances of the same provider.
+
+#### Skipping Validation for Nested Modules
+
+Modules that use provider configuration aliases are designed to be nested (called by other modules) and cannot be validated standalone because they don't have concrete provider configurations. For these modules, use `skip_validation = True`:
+
+```python
+# Nested module with provider aliases - cannot validate standalone
+tf_module(
+    name = "multi-region-module",
+    providers = {
+        "aws": {
+            "configuration_aliases": ["aws.us_east_1", "aws.us_west_2"]
+        }
+    },
+    providers_versions = "//tf:versions",
+    skip_validation = True,  # Required for modules with configuration aliases
+)
+
+# Root module that uses the nested module - can validate
+tf_module(
+    name = "root-module",
+    providers = ["aws"],
+    deps = ["//tf/modules/multi-region-module"],
+    providers_versions = "//tf:versions",
+    # skip_validation = False (default) - root modules can be validated
+)
+```
+
+This is necessary because Terraform cannot validate a module that declares configuration aliases without having concrete provider configurations passed to it from a parent module.
+
 ### Using prebuilt binaries
 
 To ensure a consistent binary version across the team, you can create an alias to the prebuilt binaries:
@@ -113,7 +174,7 @@ tf_module(
     ],
     ...
     tflint_config = ":tflint-custom-config"
-    
+
 )
 ```
 
@@ -143,7 +204,7 @@ tf_module(
     deps = [
         "//tf/modules/mod-a",
     ],
-    
+
     providers_versions = ":providers",
 )
 ```

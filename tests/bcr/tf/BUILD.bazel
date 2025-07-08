@@ -2,7 +2,7 @@ load("@rules_tf//tf:def.bzl", "tf_providers_versions", "tf_format", "tf_gen_doc"
 
 tf_providers_versions(
     name = "versions",
-    tf_version = ">= 1.9, <= 1.10",
+    tf_version = ">= 1.9, <= 1.13",
     providers = {
         "random" : "hashicorp/random:3.3.2",
         "null"   : "hashicorp/null:3.1.1",

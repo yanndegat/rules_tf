@@ -1,0 +1,13 @@
+load("@rules_tf//tf:def.bzl", "tf_module")
+
+tf_module(
+    name = "multi_provider",
+    providers = {
+        "random": {
+            "configuration_aliases": ["random.primary", "random.secondary"]
+        }
+    },
+    providers_versions = "//tf:versions",
+    tflint_config = "//tf:tflint-custom-config",
+    skip_validation = True,  # Nested module with provider aliases can't be validated standalone
+)

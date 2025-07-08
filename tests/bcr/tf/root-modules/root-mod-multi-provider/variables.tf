@@ -1,0 +1,1 @@
+# No input variables needed for this example
