@@ -8,7 +8,3 @@ resource "random_string" "secondary" {
   length   = var.length
   special  = false
 }
-
-provider "random" {
-  alias = "secondary"
-}
