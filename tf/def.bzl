@@ -23,11 +23,26 @@ def tf_module(name,
               deps = [],
               experiments = [],
               visibility= ["//visibility:public"],
-              tags = []):
+              tags = [],
+              skip_validation = False):
+
+    # Handle both string list and dict formats for providers
+    providers_list = []
+    providers_dict_json = ""
+    
+    if type(providers) == type([]):
+        # String list format (legacy)
+        providers_list = providers
+    elif type(providers) == type({}):
+        # Dict format (new support for configuration aliases)
+        providers_dict_json = json.encode(providers)
+    else:
+        fail("providers must be either a list of strings or a dict")
 
     tf_gen_versions(
         name = "gen-tf-versions",
-        providers = providers,
+        providers = providers_list,
+        providers_dict_json = providers_dict_json,
         providers_versions  = providers_versions,
         experiments = experiments,
         visibility = visibility,
@@ -72,12 +87,14 @@ def tf_module(name,
         tags = tags,
     )
 
-    tf_validate_test(
-        name = "validate",
-        module = ":module",
-        size = size,
-        tags = tags,
-    )
+    if not skip_validation:
+        tf_validate_test(
+            name = "validate",
+            module = ":module",
+            size = size,
+            tags = tags,
+        )
+
 
     pkg_tar(
         name = "tgz",
