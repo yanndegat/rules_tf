@@ -78,6 +78,27 @@ tf_module(
 )
 ```
 
+By default `tf_module` finds all terraform/tofu sources in the package and includes them. If you
+need to specify individual files/targets, you can pass in a `srcs` list like so:
+
+```
+tf_module(
+    name = "root-mod-a",
+    srcs = [
+        "main.tf",
+    ]
+    providers = [
+        "random",
+    ],
+    deps = [
+        "//tf/modules/mod-a",
+    ],
+    providers_versions = ":providers",
+)
+```
+
+Settings `srcs` disables automatic src finding, meaning only the srcs you set will be included.
+
 #### Provider Configuration Aliases
 
 The `providers` parameter supports both string list format and dictionary format (for configuration aliases):
