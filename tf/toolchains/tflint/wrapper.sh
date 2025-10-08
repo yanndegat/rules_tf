@@ -23,4 +23,6 @@ if [[ ! -f "${TFLINT_CONFIG_FILE}" ]]; then
     exit 1
 fi
 
+export TFLINT_PLUGIN_DIR="${TFLINT_DIR}/tflint_plugins"
+
 exec "${TFLINT_DIR}/tflint/tflint" --chdir="$WORKDIR" --config="${TFLINT_CONFIG_FILE}" "$@"

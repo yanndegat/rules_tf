@@ -1,6 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["config.hcl", "wrapper.sh"])
+exports_files(["config.hcl", "wrapper.sh", "tflint_plugins"])
 
 alias(
     name = "runtime",

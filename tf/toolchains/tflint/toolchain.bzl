@@ -2,7 +2,7 @@ load("@rules_tf//tf/toolchains:utils.bzl", "get_sha256sum")
 
 TflintInfo = provider(
     doc = "Information about how to invoke tflint.",
-    fields = ["runner", "deps", "config"],
+    fields = ["runner", "deps", "config", "tflint_plugins"],
 )
 
 def _tflint_toolchain_impl(ctx):
@@ -10,10 +10,12 @@ def _tflint_toolchain_impl(ctx):
         runtime = TflintInfo(
             runner = ctx.file.wrapper,
             config = ctx.file.config,
+            tflint_plugins = ctx.file.tflint_plugins,
             deps = ctx.files.bash_tools + [
                 ctx.file.wrapper,
                 ctx.file.config,
                 ctx.file.tflint,
+                ctx.file.tflint_plugins,
             ],
         ),
     )
@@ -43,6 +45,11 @@ tflint_toolchain = rule(
             mandatory = False,
             default = "@bazel_tools//tools/bash/runfiles",
             allow_files = True,
+            cfg = "target",
+        ),
+        "tflint_plugins": attr.label(
+            mandatory = True,
+            allow_single_file = True,
             cfg = "target",
         ),
     },
@@ -100,6 +107,12 @@ def _tflint_download_impl(ctx):
     if not res.success:
         fail("!failed to dl: ", url)
 
+    res = ctx.execute([
+        "bash",
+        "-c",
+        "mkdir -p tflint_plugins; TFLINT_PLUGIN_DIR=./tflint_plugins tflint/tflint -c ./config.hcl --init",
+    ])
+
     return
 
 tflint_download = repository_rule(
@@ -117,13 +130,13 @@ tflint_download = repository_rule(
     },
 )
 
-
 DECLARE_TOOLCHAIN_CHUNK = """
 tflint_toolchain(
    name = "{toolchain_repo}_toolchain_impl",
    tflint = "@{toolchain_repo}//:runtime",
    config = "@{toolchain_repo}//:config.hcl",
    wrapper = "@{toolchain_repo}//:wrapper.sh",
+   tflint_plugins = "@{toolchain_repo}//:tflint_plugins",
 )
 
 toolchain(
