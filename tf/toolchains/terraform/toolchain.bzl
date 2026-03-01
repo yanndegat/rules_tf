@@ -72,11 +72,15 @@ def _download_impl(ctx):
 
     ctx.file("versions.tf.json", content = json.encode(versions_tf))
 
-    ctx.execute([
+    result = ctx.execute([
         "bash",
         "-c",
-        "mkdir -p mirror; terraform/terraform providers mirror ./mirror > /dev/null",
+        "mkdir -p mirror; terraform/terraform providers mirror ./mirror",
         ])
+
+    if result.return_code != 0:
+        fail("terraform providers mirror failed (exit {}):\n{}\n{}".format(
+            result.return_code, result.stdout, result.stderr))
 
     return
 
