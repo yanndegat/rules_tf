@@ -40,6 +40,11 @@ jobs:
         run: bazel query "tests(//...)" | xargs -n1 bazel test
         working-directory: tests/bcr
 
+      - name: Test download overrides
+        run: |
+          ./tests/overrides/run.sh terraform
+          ./tests/overrides/run.sh tofu
+
       - name: Test run fmt
         run: bazel query 'kind("tf_format rule", //...)' | xargs -n1 bazel run
         working-directory: tests/bcr
