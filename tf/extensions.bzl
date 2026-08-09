@@ -86,6 +86,8 @@ def _tf_repositories(ctx):
                     os = host_detected_os,
                     arch = host_detected_arch,
                     mirror = version_tag.mirror,
+                    cli_pins = version_tag.cli_pins,
+                    provider_pins = version_tag.provider_pins,
                 )
                 tofu_toolchains += [tf_repo_name]
             else:
@@ -95,6 +97,8 @@ def _tf_repositories(ctx):
                     os = host_detected_os,
                     arch = host_detected_arch,
                     mirror = version_tag.mirror,
+                    cli_pins = version_tag.cli_pins,
+                    provider_pins = version_tag.provider_pins,
                 )
                 terraform_toolchains += [tf_repo_name]
 
@@ -115,6 +119,14 @@ _version_tag = tag_class(
         "tflint_version": attr.string(default = TFLINT_VERSION),
         "tfdoc_version": attr.string(default = TFDOC_VERSION),
         "mirror": attr.string_dict(mandatory = True),
+        "cli_pins": attr.label(
+            allow_single_file = [".json"],
+            doc = "JSON file pinning the CLI: per platform, the URL to fetch and its sha256. Each entry also carries a 'version', cross-checked against the 'version' attribute. Unset, the CLI is fetched from its upstream release host. See the README for the schema.",
+        ),
+        "provider_pins": attr.label(
+            allow_single_file = [".json"],
+            doc = "JSON file pinning provider plugins, keyed by registry address: per platform, the URL to fetch and its sha256. Each entry also carries a 'version', cross-checked against 'mirror'. Unset, the mirror is populated by the 'providers mirror' subprocess. See the README for the schema.",
+        ),
     },
 )
 
