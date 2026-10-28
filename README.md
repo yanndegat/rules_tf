@@ -32,6 +32,20 @@ tf.download(
     }
 )
 
+# Optional: pin tflint and terraform-docs per "{os}_{arch}" so Bazel can cache
+# their repos. A platform without a pin uses the release's checksum file.
+# tf.download(
+#    ...
+#    tflint_sha256 = {
+#        "darwin_arm64": "2ba8eefe6cbd5d34e5a0589a8897646e4da44c48f4c2fd9a77581d1e2b03bff8",
+#        "linux_amd64": "bb0a3a6043ea1bcd221fc95d49bac831bb511eb31946ca6a4050983e9e584578",
+#    },
+#    tfdoc_sha256 = {
+#        "darwin_arm64": "c4e8d863571b8d5102089a22500426a18094855040eb07e4b83e4dfd1816dd23",
+#        "linux_amd64": "dd741a0ece81059a478684b414d95d72b8b74fa58f50ac4036b4e8b56130d64b",
+#    },
+# )
+
 # Switch to tofu
 # tf = use_extension("@rules_tf//tf:extensions.bzl", "tf_repositories")
 # tf.download(

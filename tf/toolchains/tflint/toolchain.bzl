@@ -80,15 +80,17 @@ def _tflint_download_impl(ctx):
     url_sha256sums_template = "https://github.com/terraform-linters/tflint/releases/download/v{version}/checksums.txt"
     url_sha256sums = url_sha256sums_template.format(version = ctx.attr.version)
 
-    ctx.download(
-        url = [ url_sha256sums],
-        output = "sha256sums",
-    )
+    sha256sum = ctx.attr.sha256
+    if not sha256sum:
+        ctx.download(
+            url = [ url_sha256sums],
+            output = "sha256sums",
+        )
 
-    data = ctx.read("sha256sums")
-    sha256sum = get_sha256sum(data, file)
-    if sha256sum == None or sha256sum == "":
-        fail("Could not find sha256sum for file {}".format(file))
+        data = ctx.read("sha256sums")
+        sha256sum = get_sha256sum(data, file)
+        if sha256sum == None or sha256sum == "":
+            fail("Could not find sha256sum for file {}".format(file))
 
     res = ctx.download_and_extract(
         url = url,
@@ -100,7 +102,11 @@ def _tflint_download_impl(ctx):
     if not res.success:
         fail("!failed to dl: ", url)
 
-    return
+    # Bazel <8.3.0 lacks repository_ctx.repo_metadata
+    if not hasattr(ctx, "repo_metadata"):
+        return None
+
+    return ctx.repo_metadata(reproducible = ctx.attr.sha256 != "")
 
 tflint_download = repository_rule(
     _tflint_download_impl,
@@ -108,6 +114,9 @@ tflint_download = repository_rule(
         "version": attr.string(mandatory = True),
         "os": attr.string(mandatory = True),
         "arch": attr.string(mandatory = True),
+        "sha256": attr.string(
+            doc = "Expected sha256 of the tflint zip. When set, the repo is reproducible and Bazel can reuse it from the repo contents cache. When unset, the sha256 comes from the release's checksums.txt.",
+        ),
         "config": attr.label(
             mandatory = False,
             default = "@rules_tf//tf/toolchains/tflint:config.hcl",
