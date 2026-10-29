@@ -35,6 +35,7 @@ def _repo_name(*, module, tool, index, suffix = ""):
 
 def _tf_repositories(ctx):
     host_detected_os, host_detected_arch = detect_host_platform(ctx)
+    host_platform = "{}_{}".format(host_detected_os, host_detected_arch)
 
     tflint_toolchains = []
     tfdoc_toolchains = []
@@ -60,6 +61,7 @@ def _tf_repositories(ctx):
                 version = version_tag.tfdoc_version,
                 os = host_detected_os,
                 arch = host_detected_arch,
+                sha256 = version_tag.tfdoc_sha256.get(host_platform, ""),
             )
             tfdoc_toolchains += [tfdoc_repo_name]
 
@@ -74,6 +76,7 @@ def _tf_repositories(ctx):
                 version = version_tag.tflint_version,
                 os = host_detected_os,
                 arch = host_detected_arch,
+                sha256 = version_tag.tflint_sha256.get(host_platform, ""),
             )
 
             tflint_toolchains += [tflint_repo_name]
@@ -114,6 +117,10 @@ _version_tag = tag_class(
         "version": attr.string(mandatory = True),
         "tflint_version": attr.string(default = TFLINT_VERSION),
         "tfdoc_version": attr.string(default = TFDOC_VERSION),
+        # Keyed by "{os}_{arch}", e.g. "darwin_arm64". A platform with no entry
+        # falls back to the release's unpinned checksum file.
+        "tflint_sha256": attr.string_dict(),
+        "tfdoc_sha256": attr.string_dict(),
         "mirror": attr.string_dict(mandatory = True),
     },
 )
